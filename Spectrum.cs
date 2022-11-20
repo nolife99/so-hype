@@ -18,10 +18,10 @@ namespace StorybrewScripts
         void MakeLinear(int StartTime, int EndTime)
         {
             var MinimalHeight = 1;
-            var Scale = new Vector2(5, 100);
+            var Scale = new Vector2(15, 100);
             var LogScale = 15f;
-            var Position = new Vector2(-100, 240);
-            var Width = 860f;
+            var Position = new Vector2(-97, 240);
+            var Width = 854f;
 
             var BarCount = 40;
             var fftCount = BarCount * 2;
@@ -32,7 +32,7 @@ namespace StorybrewScripts
             var timeStep = Beatmap.GetTimingPointAt(StartTime).BeatDuration / 8;
             var offset = timeStep * 0.2;
             
-            for (var t = (double)StartTime; t <= EndTime; t += timeStep)
+            for (double t = StartTime; t < EndTime + timeStep; t += timeStep)
             {
                 var fft = GetFft(t + offset, fftCount, null, OsbEasing.InExpo);
                 for (var i = 0; i < fftCount; i++)
@@ -43,15 +43,17 @@ namespace StorybrewScripts
                     heightKeyframes[i].Add(t, height);
                 }
             }
+
             var barWidth = Width / BarCount;
             for (var i = 0; i < BarCount; i++)
             {
                 var keyframes = heightKeyframes[i];
-                keyframes.Simplify1dKeyframes(3, h => h);
+                keyframes.Simplify1dKeyframes(4, h => h);
 
                 var bar = GetLayer("").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(Position.X + i * barWidth, Position.Y));
-                bar.Fade(StartTime, StartTime + 1000, 0, 1);
-                bar.Fade(EndTime - 1000, EndTime, 1, 0);
+                bar.Fade(StartTime, StartTime + 500, 0, .6);
+                bar.Fade(EndTime - 500, EndTime, .6, 0);
+                bar.Additive(StartTime);
 
                 keyframes.ForEachPair((start, end) => bar.ScaleVec(start.Time, end.Time, Scale.X, start.Value, Scale.X, end.Value),
                     MinimalHeight, s => (int)s);

@@ -2,7 +2,6 @@ using OpenTK;
 using OpenTK.Graphics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
-using StorybrewCommon.Animations;
 using System.Linq;
 using System;
 
@@ -22,13 +21,13 @@ namespace StorybrewScripts
             Func<Vector3d, Vector3d, Vector3d> Rotate = (v, r) => Vector3d.Transform(v, new Quaterniond(r.X, r.Y, r.Z));
             Func<double, double> DegToRad = val => val * Math.PI / 180;
             Func<double, int> Ceiling = val => (int)Math.Ceiling(val);
-            Func<Keyframe<double>[], Keyframe<double>> GetGreatestKeyframe = keyframes =>
+            Func<StoredValue[], StoredValue> GetGreatestValue = values =>
             {
-                var maxVal = keyframes.Max(t => t.Value);
-                var finalKeyframe = new Keyframe<double>();
+                var maxVal = values.Max(t => t.Value);
+                var finalVal = new StoredValue();
 
-                foreach (var keyframe in keyframes) if (maxVal == keyframe.Value) finalKeyframe = keyframe; 
-                return finalKeyframe;
+                foreach (var value in values) if (maxVal == value.Value) finalVal = value; 
+                return finalVal;
             };
 
             #endregion
@@ -59,18 +58,18 @@ namespace StorybrewScripts
                     sprite.Fade(startTime + (c - 1) * 40, startTime + (c - 1) * 40 + 800, 0, 1);
                     sprite.Fade(endTime - r * 30, endTime - r * 30 + 800, 1, 0);
                     
-                    var keyframe = new Keyframe<double>[721];
-                    for (double f = 0; f <= 360; f += .5)
+                    var values = new StoredValue[450];
+                    for (double f = 0; f <= 360; f += .8)
                     {
                         pos = Rotate(basePos, new Vector3d(rotFunc.X, DegToRad(f), rotFunc.Z));
-                        keyframe[(int)(f * 2)] = new Keyframe<double>(spinDuration / 360 * f, pos.X);
+                        values[(int)(f * 1.25)] = new StoredValue(spinDuration / 360 * f, pos.X);
                     }
-                    var maxFrame = GetGreatestKeyframe(keyframe);
+                    var maxSV = GetGreatestValue(values);
 
-                    var sTime = startTime + maxFrame.Time - spinDuration;
+                    var sTime = startTime + maxSV.Time - spinDuration;
                     sprite.StartLoopGroup(sTime, Ceiling((endTime + 1000 - sTime) / spinDuration));
-                    sprite.MoveX(OsbEasing.InOutSine, 0, spinDuration / 2, 320 + maxFrame.Value, 320 - maxFrame.Value);
-                    sprite.MoveX(OsbEasing.InOutSine, spinDuration / 2, spinDuration, 320 - maxFrame.Value, 320 + maxFrame.Value);
+                    sprite.MoveX(OsbEasing.InOutSine, 0, spinDuration / 2, 320 + maxSV.Value, 320 - maxSV.Value);
+                    sprite.MoveX(OsbEasing.InOutSine, spinDuration / 2, spinDuration, 320 - maxSV.Value, 320 + maxSV.Value);
                     sprite.EndGroup();
 
                     if (i == 1 || i == 5)
@@ -89,6 +88,15 @@ namespace StorybrewScripts
                     }
                     else sprite.Scale(startTime, .03);
                 }
+            }
+        }
+        struct StoredValue
+        {
+            internal double Time, Value;
+            internal StoredValue(double time, double value)
+            {
+                Time = time;
+                Value = value;
             }
         }
     }
