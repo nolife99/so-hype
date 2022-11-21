@@ -16,21 +16,17 @@ namespace StorybrewScripts
         }
         void Generate(int startTime, int endTime, double size, int rings, int ringDots, double durationMult)
         {
-            #region ExtensionMethods
-
             Func<Vector3d, Vector3d, Vector3d> Rotate = (v, r) => Vector3d.Transform(v, new Quaterniond(r.X, r.Y, r.Z));
             Func<double, double> DegToRad = val => val * Math.PI / 180;
             Func<double, int> Ceiling = val => (int)Math.Ceiling(val);
             Func<StoredValue[], StoredValue> GetGreatestValue = values =>
             {
-                var maxVal = values.Max(t => t.Value);
+                var maxVal = values.Max(v => v.Value);
                 var finalVal = new StoredValue();
 
                 foreach (var value in values) if (maxVal == value.Value) finalVal = value; 
                 return finalVal;
             };
-
-            #endregion
 
             var beat = Beatmap.GetTimingPointAt(startTime).BeatDuration;
             var spinDuration = beat * durationMult;
@@ -78,13 +74,9 @@ namespace StorybrewScripts
                         sprite.Color(startTime, Color4.DeepSkyBlue);
                         sprite.Additive(startTime);
 
-                        Action<double, double> Trigger = (MaxScale, AmpScale) =>
-                        {
-                            sprite.StartTriggerGroup("HitSoundClap", startTime, endTime);
-                            sprite.Scale(0, beat / 2, AmpScale, .03);
-                            sprite.EndGroup();
-                        };
-                        Trigger(.06, .065);
+                        sprite.StartTriggerGroup("HitSoundClap", startTime, endTime);
+                        sprite.Scale(0, beat / 2, .06, .03);
+                        sprite.EndGroup();
                     }
                     else sprite.Scale(startTime, .03);
                 }
@@ -92,7 +84,7 @@ namespace StorybrewScripts
         }
         struct StoredValue
         {
-            internal double Time, Value;
+            internal readonly double Time, Value;
             internal StoredValue(double time, double value)
             {
                 Time = time;
