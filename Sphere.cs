@@ -65,7 +65,7 @@ namespace StorybrewScripts
                     }
                     var maxSVal = GetGreatestValue(values);
 
-                    var sTime = startTime + maxSV.Time - spinDur;
+                    var sTime = startTime + maxSVal.Time - spinDur;
                     sprite.StartLoopGroup(sTime, Ceiling((endTime + 1000 - sTime) / spinDur));
                     sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxSVal.Value, 320 - maxSVal.Value);
                     sprite.MoveX(OsbEasing.InOutSine, spinDur / 2, spinDur, 320 - maxSVal.Value, 320 + maxSVal.Value);
