@@ -9,12 +9,15 @@ namespace StorybrewScripts
 {
     class Sphere : StoryboardObjectGenerator
     {
+        /// <summary>
+        /// Custom build: <see href="http://github.com/nolife99/storybrew"/>
+        /// </summary>
         protected override void Generate()
         {
-            Generate(73368, 92903, 140, 18, 34, 18);
-            Generate(126740, 145926, 140, 18, 34, 15);
+            MakeSphere(73368, 92903, 140, 18, 34, 18);
+            MakeSphere(126740, 145926, 140, 18, 34, 15);
         }
-        void Generate(int startTime, int endTime, double size, int rings, int ringDots, double durationMult)
+        void MakeSphere(int startTime, int endTime, double size, int rings, int ringDots, double durationMul)
         {
             Func<Vector3d, Vector3d, Vector3d> Rotate = (v, r) => Vector3d.Transform(v, new Quaterniond(r.X, r.Y, r.Z));
             Func<double, double> DegToRad = val => val * Math.PI / 180;
@@ -24,28 +27,28 @@ namespace StorybrewScripts
                 var maxVal = values.Max(v => v.Value);
                 var finalVal = new StoredValue();
 
-                foreach (var value in values) if (maxVal == value.Value) finalVal = value; 
+                foreach (var val in values) if (maxVal == val.Value) finalVal = val; 
                 return finalVal;
             };
 
-            var beat = Beatmap.GetTimingPointAt(startTime).BeatDuration;
-            var spinDuration = beat * durationMult;
+            var beat = GetBeatDuration(startTime);
+            var spinDur = beat * durationMul;
             
             var i = 0;
-            for (double r = 0; r < rings; r++)
+            for (var r = .0; r < rings; r++)
             {
                 i++;
-                for (double c = 1; c < ringDots; c++)
+                for (var c = 1.0; c < ringDots; c++)
                 {
                     if (i > 5 && i < 10) break;
                     else if (i == 10) i = 1;
                     if (c == ringDots / 2) continue;
 
-                    var radii = size * Math.Sin(c / (double)ringDots * Math.PI * 2);
+                    var rad = size * Math.Sin(c / (double)ringDots * Math.PI * 2);
                     var basePos = new Vector3d(
-                        radii * Math.Cos(r / (double)rings * Math.PI),
+                        rad * Math.Cos(r / (double)rings * Math.PI),
                         size * Math.Cos(c / (double)ringDots * Math.PI * 2),
-                        radii * Math.Sin(r / (double)rings * Math.PI));
+                        rad * Math.Sin(r / (double)rings * Math.PI));
                             
                     var rotFunc = new Vector3d(DegToRad(-50), 0, DegToRad(-35));
                     var pos = Rotate(basePos, rotFunc);
@@ -55,22 +58,22 @@ namespace StorybrewScripts
                     sprite.Fade(endTime - r * 30, endTime - r * 30 + 800, 1, 0);
                     
                     var values = new StoredValue[450];
-                    for (double f = 0; f <= 360; f += .8)
+                    for (var f = .0; f <= 360; f += .8)
                     {
                         pos = Rotate(basePos, new Vector3d(rotFunc.X, DegToRad(f), rotFunc.Z));
-                        values[(int)(f * 1.25)] = new StoredValue(spinDuration / 360 * f, pos.X);
+                        values[(int)(f * 1.25)] = new StoredValue(spinDur / 360 * f, pos.X);
                     }
-                    var maxSV = GetGreatestValue(values);
+                    var maxSVal = GetGreatestValue(values);
 
-                    var sTime = startTime + maxSV.Time - spinDuration;
-                    sprite.StartLoopGroup(sTime, Ceiling((endTime + 1000 - sTime) / spinDuration));
-                    sprite.MoveX(OsbEasing.InOutSine, 0, spinDuration / 2, 320 + maxSV.Value, 320 - maxSV.Value);
-                    sprite.MoveX(OsbEasing.InOutSine, spinDuration / 2, spinDuration, 320 - maxSV.Value, 320 + maxSV.Value);
+                    var sTime = startTime + maxSV.Time - spinDur;
+                    sprite.StartLoopGroup(sTime, Ceiling((endTime + 1000 - sTime) / spinDur));
+                    sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxSVal.Value, 320 - maxSVal.Value);
+                    sprite.MoveX(OsbEasing.InOutSine, spinDur / 2, spinDur, 320 - maxSVal.Value, 320 + maxSVal.Value);
                     sprite.EndGroup();
 
+                    sprite.Scale(startTime, .03);
                     if (i == 1 || i == 5)
                     {
-                        sprite.Scale(startTime, .03);
                         sprite.Color(startTime, Color4.DeepSkyBlue);
                         sprite.Additive(startTime);
 
@@ -78,7 +81,6 @@ namespace StorybrewScripts
                         sprite.Scale(0, beat / 2, .06, .03);
                         sprite.EndGroup();
                     }
-                    else sprite.Scale(startTime, .03);
                 }
             }
         }
