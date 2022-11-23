@@ -22,12 +22,12 @@ namespace StorybrewScripts
             Func<Vector3d, Vector3d, Vector3d> Rotate = (v, r) => Vector3d.Transform(v, new Quaterniond(r.X, r.Y, r.Z));
             Func<double, double> DegToRad = val => val * Math.PI / 180;
             Func<double, int> Ceiling = val => (int)Math.Ceiling(val);
-            Func<StoredValue[], StoredValue> GetGreatestValue = values =>
+            Func<Vector2d[], Vector2d> GetGreatestValue = values =>
             {
-                var maxVal = values.Max(v => v.Value);
-                var finalVal = new StoredValue();
+                var maxVal = values.Max(v => v.Y);
+                var finalVal = new Vector2d();
 
-                foreach (var val in values) if (maxVal == val.Value) finalVal = val; 
+                foreach (var val in values) if (maxVal == val.Y) finalVal = val; 
                 return finalVal;
             };
 
@@ -57,18 +57,18 @@ namespace StorybrewScripts
                     sprite.Fade(startTime + (c - 1) * 40, startTime + (c - 1) * 40 + 800, 0, 1);
                     sprite.Fade(endTime - r * 30, endTime - r * 30 + 800, 1, 0);
                     
-                    var values = new StoredValue[450];
+                    var values = new Vector2d[450];
                     for (var f = .0; f <= 360; f += .8)
                     {
                         pos = Rotate(basePos, new Vector3d(rotFunc.X, DegToRad(f), rotFunc.Z));
-                        values[(int)(f * 1.25)] = new StoredValue(spinDur / 360 * f, pos.X);
+                        values[(int)(f * 1.25)] = new Vector2d(spinDur / 360 * f, pos.X);
                     }
                     var maxSVal = GetGreatestValue(values);
 
-                    var sTime = startTime + maxSVal.Time - spinDur;
+                    var sTime = startTime + maxSVal.X - spinDur;
                     sprite.StartLoopGroup(sTime, Ceiling((endTime + 1000 - sTime) / spinDur));
-                    sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxSVal.Value, 320 - maxSVal.Value);
-                    sprite.MoveX(OsbEasing.InOutSine, spinDur / 2, spinDur, 320 - maxSVal.Value, 320 + maxSVal.Value);
+                    sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxSVal.Y, 320 - maxSVal.Y);
+                    sprite.MoveX(OsbEasing.InOutSine, spinDur / 2, spinDur, 320 - maxSVal.Y, 320 + maxSVal.Y);
                     sprite.EndGroup();
 
                     sprite.Scale(startTime, .03);
@@ -82,15 +82,6 @@ namespace StorybrewScripts
                         sprite.EndGroup();
                     }
                 }
-            }
-        }
-        struct StoredValue
-        {
-            internal readonly double Time, Value;
-            internal StoredValue(double time, double value)
-            {
-                Time = time;
-                Value = value;
             }
         }
     }
