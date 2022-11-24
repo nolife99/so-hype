@@ -19,7 +19,7 @@ namespace StorybrewScripts
         }
         void MakeSphere(int startTime, int endTime, double size, int rings, int ringDots, double durationMul)
         {
-            Func<Vector3d, Vector3d, Vector3d> Rotate = (v, r) => Vector3d.Transform(v, new Quaterniond(r.X, r.Y, r.Z));
+            Func<Vector3d, Vector3d, Vector3d> Rotate = (v, r) => Vector3d.Transform(v, new Quaterniond(r));
             Func<double, double> DegToRad = val => val * Math.PI / 180;
             Func<double, int> Ceiling = val => (int)Math.Ceiling(val);
             Func<Vector2d[], Vector2d> GetGreatestValue = values =>
