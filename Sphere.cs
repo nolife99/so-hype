@@ -57,11 +57,11 @@ namespace StorybrewScripts
                     sprite.Fade(startTime + (c - 1) * 40, startTime + (c - 1) * 40 + 800, 0, 1);
                     sprite.Fade(endTime - r * 30, endTime - r * 30 + 800, 1, 0);
                     
-                    var values = new Vector2d[450];
-                    for (var f = .0; f <= 360; f += .8)
+                    var values = new Vector2d[800];
+                    for (var f = .0; f <= 360; f += .45)
                     {
                         pos = Rotate(basePos, new Vector3d(rotFunc.X, DegToRad(f), rotFunc.Z));
-                        values[(int)(f * 1.25)] = new Vector2d(spinDur / 360 * f, pos.X);
+                        values[(int)(1 / .45 * f)] = new Vector2d(spinDur / 360 * f, pos.X);
                     }
                     var maxSVal = GetGreatestValue(values);
 
