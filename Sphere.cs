@@ -2,7 +2,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
-using System.Linq;
+using StorybrewCommon.Animations;
 using System;
 
 namespace StorybrewScripts
@@ -11,53 +11,45 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            MakeSphere(73368, 92903, 140, new Vector2i(18, 34), 18);
-            MakeSphere(126740, 145926, 140, new Vector2i(18, 34), 15);
+            var timer = System.Diagnostics.Stopwatch.StartNew();
+            MakeSphere(73368, 92903, 140, 5, new Vector2(36, 18), 18);
+            MakeSphere(126740, 145926, 140, 5, new Vector2(36, 18), 15);
+            timer.Stop();
+            Log($"Execution: {timer.ElapsedMilliseconds / 1000f} seconds");
         }
-        void MakeSphere(int startTime, int endTime, double size, Vector2i dots, double durationMul)
+        void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double durationMul, int accuracyLevel = 1000)
         {
-            Func<Keyframe<double>[], Keyframe<double>> GetGreatestValue = values =>
-            {
-                var maxVal = values.Max(v => v.Value);
-                var finalVal = new Keyframe<double>();
-
-                foreach (var val in values) if (maxVal == val.Value) finalVal = val; 
-                return finalVal;
-            };
-
             var beat = Beatmap.GetTimingPointAt(startTime).BeatDuration;
             var spinDur = beat * durationMul;
             
-            var i = 0;
-            for (var r = .0; r < dots.X; r++)
+            var i = 1;
+            for (var r = 0d; r < dots.X; r++)
             {
                 i++;
-                for (var c = 1.0; c < dots.Y; c++)
+                for (var c = 1d; c < dots.Y; c++)
                 {
-                    if (i > 5 && i < 10) break;
-                    else if (i == 10) i = 1;
-                    if (c == ringDots / 2) continue;
+                    if (i > split && i < split * 2) break;
+                    else if (i == split * 2) i = 1;
 
-                    var rad = size * Math.Sin(c / (double)dots.Y * Math.PI * 2);
+                    var rad = size * Math.Sin(c / dots.Y * Math.PI);
                     var basePos = new Vector3d(
-                        rad * Math.Cos(r / (double)dots.X * Math.PI),
-                        size * Math.Cos(c / (double)dots.Y * Math.PI * 2),
-                        rad * Math.Sin(r / (double)dots.X * Math.PI));
+                        rad * Math.Cos(r / dots.X * Math.PI * 2),
+                        size * Math.Cos(c / dots.Y * Math.PI),
+                        rad * Math.Sin(r / dots.X * Math.PI * 2));
                             
-                    var rotFunc = new Vector3d(MathHelper.DegreesToRadians(-50), 0, MathHelper.DegreesToRadians(-35));
+                    var rotFunc = new Vector3d(MathHelper.DegreesToRadians(42.5), 0, MathHelper.DegreesToRadians(37.5));
                     var pos = Vector3d.Transform(basePos, new Quaterniond(rotFunc));
 
                     var sprite = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(0, (float)pos.Y + 240));
-                    sprite.Fade(startTime + (c - 1) * 40, startTime + (c - 1) * 40 + 800, 0, 1);
+                    sprite.Fade(startTime + r * 40, startTime + r * 40 + 800, 0, 1);
                     sprite.Fade(endTime - r * 30, endTime - r * 30 + 800, 1, 0);
                     
-                    var values = new Keyframe<double>[1000];
-                    for (var f = .0; f < 360; f += .36)
+                    var maxVal = new Keyframe<double>();
+                    for (var f = .0; f < 360; f += 360 / (double)accuracyLevel)
                     {
                         pos = Vector3d.Transform(basePos, new Quaterniond(rotFunc.X, MathHelper.DegreesToRadians(f), rotFunc.Z));
-                        values.Add(spinDur / 360 * f, pos.X);
+                        if (maxVal.Value < pos.X) maxVal = new Keyframe<double>(spinDur / 360 * f, pos.X);
                     }
-                    var maxVal = GetGreatestValue(values);
 
                     var sTime = startTime + maxVal.Time - spinDur;
                     sprite.StartLoopGroup(sTime, (int)Math.Ceiling((endTime + 1000 - sTime) / spinDur));
@@ -66,7 +58,7 @@ namespace StorybrewScripts
                     sprite.EndGroup();
 
                     sprite.Scale(startTime, .03);
-                    if (i == 1 || i == 5)
+                    if (i == 1 || i == split)
                     {
                         sprite.Color(startTime, Color4.DeepSkyBlue);
                         sprite.Additive(startTime);
