@@ -9,9 +9,6 @@ namespace StorybrewScripts
 {
     class Sphere : StoryboardObjectGenerator
     {
-        /// <summary>
-        /// Custom build: <see href="http://github.com/nolife99/storybrew"/>
-        /// </summary>
         protected override void Generate()
         {
             MakeSphere(73368, 92903, 140, 18, 34, 18);
@@ -19,9 +16,6 @@ namespace StorybrewScripts
         }
         void MakeSphere(int startTime, int endTime, double size, int rings, int ringDots, double durationMul)
         {
-            Func<Vector3d, Vector3d, Vector3d> Rotate = (v, r) => Vector3d.Transform(v, new Quaterniond(r));
-            Func<double, double> DegToRad = val => val * Math.PI / 180;
-            Func<double, int> Ceiling = val => (int)Math.Ceiling(val);
             Func<Vector2d[], Vector2d> GetGreatestValue = values =>
             {
                 var maxVal = values.Max(v => v.Y);
@@ -50,25 +44,25 @@ namespace StorybrewScripts
                         size * Math.Cos(c / (double)ringDots * Math.PI * 2),
                         rad * Math.Sin(r / (double)rings * Math.PI));
                             
-                    var rotFunc = new Vector3d(DegToRad(-50), 0, DegToRad(-35));
-                    var pos = Rotate(basePos, rotFunc);
+                    var rotFunc = new Vector3d(MathHelper.DegreesToRadians(-50), 0, MathHelper.DegreesToRadians(-35));
+                    var pos = Vector3d.Transform(basePos, new Quaterniond(rotFunc));
 
                     var sprite = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(0, (float)pos.Y + 240));
                     sprite.Fade(startTime + (c - 1) * 40, startTime + (c - 1) * 40 + 800, 0, 1);
                     sprite.Fade(endTime - r * 30, endTime - r * 30 + 800, 1, 0);
                     
-                    var values = new Vector2d[800];
-                    for (var f = .0; f <= 360; f += .45)
+                    var values = new Vector2d[1000];
+                    for (var f = .0; f <= 360; f += .36)
                     {
-                        pos = Rotate(basePos, new Vector3d(rotFunc.X, DegToRad(f), rotFunc.Z));
-                        values[(int)(1 / .45 * f)] = new Vector2d(spinDur / 360 * f, pos.X);
+                        pos = Vector3d.Transform(basePos, new Quaterniond(rotFunc.X, MathHelper.DegreesToRadians(f), rotFunc.Z));
+                        values[(int)(1 / .36 * f)] = new Vector2d(spinDur / 360 * f, pos.X);
                     }
-                    var maxSVal = GetGreatestValue(values);
+                    var maxVal = GetGreatestValue(values);
 
-                    var sTime = startTime + maxSVal.X - spinDur;
-                    sprite.StartLoopGroup(sTime, Ceiling((endTime + 1000 - sTime) / spinDur));
-                    sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxSVal.Y, 320 - maxSVal.Y);
-                    sprite.MoveX(OsbEasing.InOutSine, spinDur / 2, spinDur, 320 - maxSVal.Y, 320 + maxSVal.Y);
+                    var sTime = startTime + maxVal.X - spinDur;
+                    sprite.StartLoopGroup(sTime, (int)Math.Ceiling((endTime + 1000 - sTime) / spinDur));
+                    sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxVal.Y, 320 - maxVal.Y);
+                    sprite.MoveX(OsbEasing.InOutSine, spinDur / 2, spinDur, 320 - maxVal.Y, 320 + maxVal.Y);
                     sprite.EndGroup();
 
                     sprite.Scale(startTime, .03);

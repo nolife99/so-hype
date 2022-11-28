@@ -10,11 +10,9 @@ namespace StorybrewScripts
     class Lyrics : StoryboardObjectGenerator
     {
         readonly float FontScale = .3f;
-
-        FontGenerator Font;
-        FontGenerator JapFont;
-
         double BeatDuration;
+
+        FontGenerator Font, JapFont;
 
         protected override void Generate()
         {
@@ -31,8 +29,8 @@ namespace StorybrewScripts
             {
                 Action<string, int, int> MakeLine = (line, startTime, endTime) =>
                 {
-                    float width = 0;
-                    float height = 0;
+                    var width = 0f;
+                    var height = 0f;
 
                     foreach (var letter in line)
                     {

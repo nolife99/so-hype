@@ -18,12 +18,12 @@ namespace StorybrewScripts
         void MakeLinear(int StartTime, int EndTime)
         {
             var MinimalHeight = 1;
-            var Scale = new Vector2(15, 100);
+            var Scale = new Vector2(17.5f, 100);
             var LogScale = 15f;
-            var Position = new Vector2(-97, 240);
-            var Width = 854f;
+            var Position = new Vector2(-96, 240);
+            var Width = 856f;
 
-            var BarCount = 40;
+            var BarCount = 35;
             var fftCount = BarCount * 2;
 
             var heightKeyframes = new KeyframedValue<float>[fftCount];
