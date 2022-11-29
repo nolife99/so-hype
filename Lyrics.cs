@@ -1,5 +1,4 @@
 using OpenTK;
-using OpenTK.Graphics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Subtitles;
@@ -9,15 +8,12 @@ namespace StorybrewScripts
 {
     class Lyrics : StoryboardObjectGenerator
     {
-        readonly float FontScale = .3f;
-        double BeatDuration;
-
-        FontGenerator Font, JapFont;
-
         protected override void Generate()
         {
-            BeatDuration = GetBeatDuration(4298);
-            Font = LoadFont("sb/f", new FontDescription
+            var scale = .3f;
+            var beat = Beatmap.GetTimingPointAt(4298).BeatDuration;
+            
+            var font = LoadFont("sb/f", new FontDescription
             {
                 FontPath = $"{ProjectPath}/assetlibrary/NotoSansJP.otf",
                 Color = Color4.White,
@@ -34,9 +30,9 @@ namespace StorybrewScripts
 
                     foreach (var letter in line)
                     {
-                        var texture = Font.GetTexture(letter.ToString());
-                        width += texture.BaseWidth * FontScale;
-                        height = Math.Max(height, texture.BaseHeight * FontScale);
+                        var texture = font.GetTexture(letter.ToString());
+                        width += texture.BaseWidth * scale;
+                        height = Math.Max(height, texture.BaseHeight * scale);
                     }
 
                     var letterX = 320 - width * .5f;
@@ -44,30 +40,30 @@ namespace StorybrewScripts
 
                     foreach (var letter in line)
                     {
-                        var texture = Font.GetTexture(letter.ToString());
+                        var texture = font.GetTexture(letter.ToString());
                         if (!texture.IsEmpty)
                         {
-                            Vector2 position = new Vector2(letterX, 420) + texture.OffsetFor(OsbOrigin.Centre) * FontScale;
+                            Vector2 position = new Vector2(letterX, 420) + texture.OffsetFor(OsbOrigin.Centre) * scale;
                             if (!hasBox)
                             {
                                 var box = pool.Get(startTime, endTime, "sb/p.png", OsbOrigin.Centre, new Vector2(320, position.Y),
-                                    (p, s, e) => p.Color(s, Color4.Black));
+                                    (p, s, e) => p.Color(s, 0, 0, 0));
 
-                                box.ScaleVec(OsbEasing.OutCirc, startTime, startTime + BeatDuration, 0, height + 5, width + 15, height + 5);
-                                box.ScaleVec(OsbEasing.InExpo, endTime - BeatDuration, endTime, width + 15, height + 5, 0, height + 5);
+                                box.ScaleVec(OsbEasing.OutCirc, startTime, startTime + beat, 0, height + 5, width + 15, height + 5);
+                                box.ScaleVec(OsbEasing.InExpo, endTime - beat, endTime, width + 15, height + 5, 0, height + 5);
 
                                 hasBox = true;
                             }
 
                             var sprite = pool.Get(startTime, endTime, texture.Path, OsbOrigin.Centre, new Vector2(0, position.Y),
-                                (p, s, e) => p.Scale(s, FontScale));
+                                (p, s, e) => p.Scale(s, scale));
 
-                            sprite.MoveX(OsbEasing.OutCirc, startTime, startTime + BeatDuration, 320, position.X);
-                            sprite.MoveX(OsbEasing.InQuint, endTime - BeatDuration / 2, endTime, position.X, 320);
-                            sprite.Fade(startTime, startTime + BeatDuration, 0, 1);
-                            sprite.Fade(endTime - BeatDuration / 2, endTime, 1, 0);
+                            sprite.MoveX(OsbEasing.OutCirc, startTime, startTime + beat, 320, position.X);
+                            sprite.MoveX(OsbEasing.InQuint, endTime - beat / 2, endTime, position.X, 320);
+                            sprite.Fade(startTime, startTime + beat, 0, 1);
+                            sprite.Fade(endTime - beat / 2, endTime, 1, 0);
                         }
-                        letterX += texture.BaseWidth * FontScale;
+                        letterX += texture.BaseWidth * scale;
                     }
                 };
 
