@@ -10,12 +10,12 @@ namespace StorybrewScripts
         protected override void Generate()
         {
             var timer = System.Diagnostics.Stopwatch.StartNew();
-            MakeSphere(73368, 92903, 140, 5, new Vector2(36, 18), 18);
-            MakeSphere(126740, 145926, 140, 5, new Vector2(36, 18), 15);
+            MakeSphere(73368, 92903, 140, 5, new Vector2(36, 20), 18, 900);
+            MakeSphere(126740, 145926, 140, 5, new Vector2(36, 20), 15, 900);
             timer.Stop();
             Log($"Execution: {timer.ElapsedMilliseconds / 1000f} seconds");
         }
-        void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double durationMul, int accuracyLevel = 1000)
+        void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double durationMul, int accuracyLevel)
         {
             var beat = Beatmap.GetTimingPointAt(startTime).BeatDuration;
             var spinDur = beat * durationMul;
