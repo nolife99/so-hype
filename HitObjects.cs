@@ -13,7 +13,7 @@ namespace StorybrewScripts
         {
             Trail(25926, 37001);
             DotBurst(42670, 46856);
-		    DotBurst(73368, 92903);
+            DotBurst(73368, 92903);
             Trail(48949, 69269);
             Trail(115228, 115228);
             DotBurst(115577, 126304);
@@ -61,23 +61,22 @@ namespace StorybrewScripts
                 if (hitobject.StartTime < startTime || hitobject.StartTime > endTime) continue;
 
                 var pos = hitobject.Position + hitobject.StackOffset;
-                var sprite = pool.Get(hitobject.StartTime, hitobject.StartTime + 1000);
+                var sprite = pool.Get(hitobject.StartTime, hitobject.StartTime + 1500);
                 sprite.Move(hitobject.StartTime, pos);
-                sprite.Fade(hitobject.StartTime, hitobject.StartTime + 1000, 0.5, 0);
+                sprite.Fade(hitobject.StartTime, hitobject.StartTime + 1500, 0.45, 0);
                 if ((Color4)sprite.ColorAt(hitobject.StartTime) != hitobject.Color) sprite.Color(hitobject.StartTime, hitobject.Color);
 
                 if (hitobject is OsuSlider)
                 {
-                    var timestep = Beatmap.GetTimingPointAt((int)hitobject.StartTime).BeatDuration / 12;
+                    var timestep = Beatmap.GetTimingPointAt((int)hitobject.StartTime).BeatDuration / 16;
                     var sTime = hitobject.StartTime + timestep;
 
                     while (true)
                     {
-                        var stepSprite = pool.Get(sTime - 50, sTime + 1000);
-                        stepSprite.Move(sTime - 50, hitobject.PositionAtTime(sTime));
-                        stepSprite.Fade(sTime - 50, sTime, 0, 0.4);
-                        stepSprite.Fade(sTime, sTime + 1000, 0.4, 0);
-                        if ((Color4)stepSprite.ColorAt(sTime) != hitobject.Color) stepSprite.Color(sTime - 50, hitobject.Color);
+                        var stepSprite = pool.Get(sTime, sTime + 1500);
+                        stepSprite.Move(sTime, hitobject.PositionAtTime(sTime));
+                        stepSprite.Fade(sTime, sTime + 1500, 0.35, 0);
+                        if ((Color4)stepSprite.ColorAt(sTime) != hitobject.Color) stepSprite.Color(sTime, hitobject.Color);
 
                         if (sTime > hitobject.EndTime) break;
                         sTime += timestep;

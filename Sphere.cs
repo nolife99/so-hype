@@ -14,15 +14,24 @@ namespace StorybrewScripts
             MakeSphere(73368, 92903, 130, 5, new Vector2(36, 20), 18);
             MakeSphere(126740, 145926, 130, 5, new Vector2(36, 20), 15);
         }
-        void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double durationMul, int accuracyLevel = 950)
+
+        ///<summary> Generates a transformed sphere </summary>
+        ///<param name="startTime"> Start time of the object </param>
+        ///<param name="endTime"> End time of the object </param>
+        ///<param name="size"> Scale multiplier of the object </param>
+        ///<param name="split"> Amount of dots removed between splits </param>
+        ///<param name="dots"> X and Y subdivision integers of the object </param>
+        ///<param name="durationMul"> Spin duration multiplier of the object </param>
+        ///<param name="polling"> Translation accuracy of the object <para> Higher for better looks, lower for speed </para> </param>
+        void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double durationMul, int polling = 950)
         {
             var beat = Beatmap.GetTimingPointAt(startTime).BeatDuration;
             var spinDur = beat * durationMul;
 
-            var blackHole = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(323, 257));
-            blackHole.Scale(OsbEasing.OutBack, startTime, startTime + beat * 4, 0, 5.1);
-            blackHole.Color(startTime, 0, 0, 0);
-            blackHole.Fade(OsbEasing.In, endTime, endTime + beat * 4, .85, 0);
+            var back = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(323, 257));
+            back.Scale(OsbEasing.OutBack, startTime, startTime + beat * 4, 0, 5.1);
+            back.Color(startTime, 0, 0, 0);
+            back.Fade(OsbEasing.In, endTime, endTime + beat * 4, .85, 0);
             
             var i = 1;
             for (var r = 0; r < dots.X; r++, i++) for (var c = 1; c < dots.Y; c++)
@@ -41,7 +50,7 @@ namespace StorybrewScripts
                 sprite.Fade(endTime - c * 30, endTime - c * 30 + beat * 4, 1, 0);
                 
                 var maxVal = new Keyframe<double>();
-                for (var f = .0; f < 360; f += 360d / accuracyLevel)
+                for (var f = .0; f < 360; f += 360d / polling)
                 {
                     pos = Vector3d.Transform(basePos, new Quaterniond(rotFunc.X, DegreesToRadians(f), rotFunc.Z));
                     if (pos.X <= maxVal.Value) continue;
