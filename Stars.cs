@@ -37,7 +37,7 @@ namespace StorybrewScripts
 
             for (var i = 0; i < 750; i++)
             {
-                Vector3 RandEndPos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), i * 7);
+                var RandEndPos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), i * 7);
 
                 var star = new Sprite3d
                 {
@@ -91,7 +91,7 @@ namespace StorybrewScripts
 
             for (var i = 0; i < 750; i++)
             {
-                Vector3 RandEndPos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), i * 5);
+                var RandEndPos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), i * 5);
 
                 var star = new Sprite3d
                 {
@@ -144,7 +144,7 @@ namespace StorybrewScripts
 
             for (var i = 0; i < 700; i++)
             {
-                Vector3 RandEndPos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), i * 5);
+                var RandEndPos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), i * 5);
 
                 var star = new Sprite3d
                 {

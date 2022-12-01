@@ -31,22 +31,21 @@ namespace StorybrewScripts
         }
         void DotBurst(int startTime, int endTime)
         {
-            using (var pool = new SpritePool(GetLayer(""), "sb/d.png", OsbOrigin.Centre, true)) foreach (var hit in Beatmap.HitObjects)
+            using (var pool = new SpritePool(GetLayer(""), "sb/d.png", true)) foreach (var hit in Beatmap.HitObjects) 
+                if (hit.StartTime >= startTime && hit.EndTime <= endTime) for (var i = 0; i < Random(15, 20); i++)
             {
-                if (hit.StartTime < startTime || hit.EndTime > endTime) continue;
-                for (var i = 0; i < Random(15, 20); i++)
-                {
-                    var angle = Random(PI * 2);
-                    var radius = Random(40f, 80);
+                var angle = Random(PI * 2);
+                var radius = Random(40f, 80);
 
-                    var startPos = hit.Position + hit.StackOffset;
-                    var endPos = new Vector2(radius * (float)Cos(angle) + startPos.X, radius * (float)Sin(angle) + startPos.Y);
-                    var duration = Random(1000, 2000);
+                var startPos = hit.Position + hit.StackOffset;
+                var endPos = new Vector2(radius * (float)Cos(angle) + startPos.X, radius * (float)Sin(angle) + startPos.Y);
+                var duration = Random(1000, 2000);
 
-                    var sprite = pool.Get(hit.StartTime, hit.StartTime + duration);
-                    sprite.Scale(OsbEasing.In, hit.StartTime, hit.StartTime + duration, radius * 6E-4, 0);
-                    sprite.Move(OsbEasing.OutQuint, hit.StartTime, hit.StartTime + duration, startPos, endPos);
-                }
+                var sprite = pool.Get(hit.StartTime, hit.StartTime + duration);
+                sprite.Scale(OsbEasing.In, hit.StartTime, hit.StartTime + duration, radius * 6E-4, 0);
+                sprite.Move(OsbEasing.OutExpo, hit.StartTime, hit.StartTime + duration, startPos, endPos);
+
+                if ((Color4)sprite.ColorAt(hit.StartTime) != hit.Color) sprite.Color(hit.StartTime, hit.Color);
             }
         }
         void Trail(int startTime, int endTime)
@@ -55,8 +54,7 @@ namespace StorybrewScripts
             {
                 light.Additive(start);
                 light.Scale(start, 0.1);
-            })) 
-            foreach (var hitobject in Beatmap.HitObjects)
+            })) foreach (var hitobject in Beatmap.HitObjects)
             {
                 if (hitobject.StartTime < startTime || hitobject.StartTime > endTime) continue;
 

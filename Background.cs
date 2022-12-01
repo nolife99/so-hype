@@ -8,13 +8,14 @@ namespace StorybrewScripts
     class Background : StoryboardObjectGenerator
     {
         int bitmapH, beat;
-        readonly static string bg = "63888719_p0.jpg", blur = "sb/b/blur.png";
+        const string bg = "63888719_p0.jpg", blur = "sb/b/blur.png";
+
         protected override void Generate()
         {
             bitmapH = GetMapsetBitmap(blur).Height;
             beat = (int)Beatmap.GetTimingPointAt(48949).BeatDuration;
 
-		    ScreenFillHighlight(25228, 25926, 25926, 26275);
+            ScreenFillHighlight(25228, 25926, 25926, 26275);
             ScreenFillHighlight(102670, 103368, 104065, 104414);
             ScreenFillHighlight(226856, 228949, 229647, 229996);
 
