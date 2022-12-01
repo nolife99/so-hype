@@ -21,7 +21,7 @@ namespace StorybrewScripts
         ///<param name="size"> Scale multiplier of the object </param>
         ///<param name="split"> Amount of dots between equal splits <para> Should be a positive integer <para/></param>
         ///<param name="dots"> X and Y subdivisions of the object <para> Should be positive integers <para/></param>
-        ///<param name="durationMul"> Spin duration multiplier of the object </param>
+        ///<param name="spinMult"> Spin duration multiplier of the object </param>
         ///<param name="polling"> Translation accuracy of the object <para> Higher for better looks, lower for speed </para></param>
         void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double spinMult, double polling = 95)
         {
