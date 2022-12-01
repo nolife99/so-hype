@@ -19,14 +19,14 @@ namespace StorybrewScripts
         ///<param name="startTime"> Start time of the object </param>
         ///<param name="endTime"> End time of the object </param>
         ///<param name="size"> Scale multiplier of the object </param>
-        ///<param name="split"> Amount of dots removed between splits </param>
-        ///<param name="dots"> X and Y subdivision integers of the object </param>
+        ///<param name="split"> Amount of dots between equal splits <para> Should be a positive integer <para/></param>
+        ///<param name="dots"> X and Y subdivisions of the object <para> Should be positive integers <para/></param>
         ///<param name="durationMul"> Spin duration multiplier of the object </param>
-        ///<param name="polling"> Translation accuracy of the object <para> Higher for better looks, lower for speed </para> </param>
-        void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double durationMul, int polling = 950)
+        ///<param name="polling"> Translation accuracy of the object <para> Higher for better looks, lower for speed </para></param>
+        void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double spinMult, double polling = 95)
         {
             var beat = Beatmap.GetTimingPointAt(startTime).BeatDuration;
-            var spinDur = beat * durationMul;
+            var spinDur = beat * spinMult;
 
             var back = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(323, 257));
             back.Scale(OsbEasing.OutBack, startTime, startTime + beat * 4, 0, 5.1);
@@ -50,7 +50,7 @@ namespace StorybrewScripts
                 sprite.Fade(endTime - c * 30, endTime - c * 30 + beat * 4, 1, 0);
                 
                 var maxVal = new Keyframe<double>();
-                for (var f = .0; f < 360; f += 360d / polling)
+                for (var f = 0d; f < 360; f += 36 / polling)
                 {
                     pos = Vector3d.Transform(basePos, new Quaterniond(rotFunc.X, DegreesToRadians(f), rotFunc.Z));
                     if (pos.X <= maxVal.Value) continue;
@@ -64,7 +64,7 @@ namespace StorybrewScripts
                 sprite.EndGroup();
 
                 sprite.Scale(startTime, .03);
-                if (i == 1 || i == split)
+                if (split > 0 && i == 1 || i == split)
                 {
                     sprite.Color(startTime, 0, .75, 1);
                     sprite.Additive(startTime);
