@@ -29,7 +29,7 @@ namespace StorybrewScripts
             var timeStep = Beatmap.GetTimingPointAt(StartTime).BeatDuration / 8;
             var offset = timeStep * 0.2;
             
-            for (double t = StartTime; t < EndTime + timeStep; t += timeStep)
+            for (double t = StartTime; t <= EndTime + 10; t += timeStep)
             {
                 var fft = GetFft(t + offset, fftCount, null, OsbEasing.InExpo);
                 for (var i = 0; i < fftCount; i++)

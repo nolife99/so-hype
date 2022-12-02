@@ -16,7 +16,7 @@ namespace StorybrewScripts
             beat = (int)Beatmap.GetTimingPointAt(48949).BeatDuration;
 
             ScreenFillHighlight(25228, 25926, 25926, 26275);
-            ScreenFillHighlight(102670, 103368, 104065, 104414);
+            ScreenFillHighlight(102670, 103891, 104065, 104414);
             ScreenFillHighlight(226856, 228949, 229647, 229996);
 
             Flash(28542, 29414, .6);

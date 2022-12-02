@@ -18,7 +18,7 @@ namespace StorybrewScripts
             Trail(115228, 115228);
             DotBurst(115577, 126304);
             Trail(120461, 120461);
-            Trail(126391, 145926);
+            Trail(126391, 145926, true);
             DotBurst(148019, 151158);
             Trail(151507, 173746);
             DotBurst(173833, 183513);
@@ -48,35 +48,44 @@ namespace StorybrewScripts
                 if ((Color4)sprite.ColorAt(hit.StartTime) != hit.Color) sprite.Color(hit.StartTime, hit.Color);
             }
         }
-        void Trail(int startTime, int endTime)
+        void Trail(int startTime, int endTime, bool collect = false)
         {
             using (var pool = new SpritePool(GetLayer(""), "sb/hl.png", (light, start, end) =>
             {
                 light.Additive(start);
                 light.Scale(start, 0.1);
-            })) foreach (var hitobject in Beatmap.HitObjects)
+            })) 
+            foreach (var hit in Beatmap.HitObjects) if (hit.StartTime >= startTime && hit.StartTime <= endTime)
             {
-                if (hitobject.StartTime < startTime || hitobject.StartTime > endTime) continue;
+                var pos = hit.Position + hit.StackOffset;
+                var sprite = pool.Get(hit.StartTime, hit.StartTime + 1500);
+                sprite.Move(hit.StartTime, pos);
+                sprite.Fade(hit.StartTime, hit.StartTime + 1500, 0.45, 0);
+                if ((Color4)sprite.ColorAt(hit.StartTime) != hit.Color) sprite.Color(hit.StartTime, hit.Color);
 
-                var pos = hitobject.Position + hitobject.StackOffset;
-                var sprite = pool.Get(hitobject.StartTime, hitobject.StartTime + 1500);
-                sprite.Move(hitobject.StartTime, pos);
-                sprite.Fade(hitobject.StartTime, hitobject.StartTime + 1500, 0.45, 0);
-                if ((Color4)sprite.ColorAt(hitobject.StartTime) != hitobject.Color) sprite.Color(hitobject.StartTime, hitobject.Color);
-
-                if (hitobject is OsuSlider)
+                if (hit is OsuSlider)
                 {
-                    var timestep = Beatmap.GetTimingPointAt((int)hitobject.StartTime).BeatDuration / 16;
-                    var sTime = hitobject.StartTime + timestep;
+                    var timestep = Beatmap.GetTimingPointAt((int)hit.StartTime).BeatDuration / 16;
+                    var sTime = hit.StartTime + timestep;
 
                     while (true)
                     {
                         var stepSprite = pool.Get(sTime, sTime + 1500);
-                        stepSprite.Move(sTime, hitobject.PositionAtTime(sTime));
-                        stepSprite.Fade(sTime, sTime + 1500, 0.35, 0);
-                        if ((Color4)stepSprite.ColorAt(sTime) != hitobject.Color) stepSprite.Color(sTime, hitobject.Color);
 
-                        if (sTime > hitobject.EndTime) break;
+                        var slidePos = hit.PositionAtTime(sTime);
+                        if (collect)
+                        {   
+                            stepSprite.Move(OsbEasing.InBack, sTime, sTime + 1500, slidePos, new Vector2(320, 240));
+                            stepSprite.Color(OsbEasing.InQuart, sTime, sTime + 1500, hit.Color, Color4.White);
+                        }
+                        else 
+                        {
+                            stepSprite.Move(sTime, slidePos);
+                            if ((Color4)stepSprite.ColorAt(sTime) != hit.Color) stepSprite.Color(sTime, hit.Color);
+                        }
+                        stepSprite.Fade(OsbEasing.InQuad, sTime, sTime + 1500, 0.35, 0);
+
+                        if (sTime > hit.EndTime) break;
                         sTime += timestep;
                     }
                 }
