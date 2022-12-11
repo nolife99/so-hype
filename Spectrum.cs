@@ -27,7 +27,7 @@ namespace StorybrewScripts
             for (var i = 0; i < fftCount; i++) fftKeyframes[i] = new KeyframedValue<float>(null);
 
             var timeStep = Beatmap.GetTimingPointAt(StartTime).BeatDuration / 8;
-            var offset = timeStep * 0.2;
+            var offset = timeStep * .2;
             
             for (double t = StartTime; t <= EndTime + 10; t += timeStep)
             {

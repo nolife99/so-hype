@@ -1,9 +1,9 @@
 using OpenTK;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
-using StorybrewCommon.Animations;
-using static OpenTK.MathHelper;
-using static System.Math;
+using StorybrewCommon.OpenTKUtil;
+
+using static StorybrewCommon.OpenTKUtil.MathHelper;
 
 namespace StorybrewScripts
 {
@@ -11,65 +11,59 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            MakeSphere(73368, 92903, 130, 5, new Vector2(36, 20), 18);
-            MakeSphere(126740, 145926, 130, 5, new Vector2(36, 20), 15);
+            MakeSphere(73368, 92903, 130, 5, new Vector2i(36, 20), 18);
+            MakeSphere(126740, 145926, 130, 5, new Vector2i(36, 20), 15);
         }
 
-        ///<summary> Generates a transformed sphere </summary>
-        ///<param name="startTime"> Start time of the object </param>
-        ///<param name="endTime"> End time of the object </param>
-        ///<param name="size"> Scale multiplier of the object </param>
-        ///<param name="split"> Amount of dots between equal splits <para> Should be a positive integer </para></param>
-        ///<param name="dots"> X and Y subdivisions of the object <para> Should be positive integers </para></param>
+        ///<summary> Generates a transformed sphere that rotates about the yaw axis </summary>
+        ///<param name="start"> Start time of the object </param>
+        ///<param name="end"> End time of the object </param>
+        ///<param name="size"> Size multiplier of the object </param>
+        ///<param name="split"> Amount of dots between equal splits </param>
+        ///<param name="dots"> X and Y subdivisions of the object <para>Should be positive integers</para></param>
         ///<param name="spinMult"> Spin duration multiplier of the object </param>
-        ///<param name="polling"> Translation accuracy of the object <para> Higher for better looks, lower for speed </para></param>
-        void MakeSphere(int startTime, int endTime, double size, int split, Vector2 dots, double spinMult, double polling = 95)
+        void MakeSphere(int start, int end, double size, uint split, Vector2i dots, double spinMult)
         {
-            var beat = Beatmap.GetTimingPointAt(startTime).BeatDuration;
+            var beat = Beatmap.GetTimingPointAt(start).BeatDuration;
             var spinDur = beat * spinMult;
 
             var back = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(323, 257));
-            back.Scale(OsbEasing.OutBack, startTime, startTime + beat * 4, 0, 5.1);
-            back.Color(startTime, 0, 0, 0);
-            back.Fade(OsbEasing.In, endTime, endTime + beat * 4, .85, 0);
-            
+            back.Scale(OsbEasing.OutBack, start, start + beat * 4, 0, 5.1);
+            back.Color(start, 0, 0, 0);
+            back.Fade(OsbEasing.In, end, end + beat * 4, .85, 0);
+
             var i = 1;
-            for (var r = 0; r < dots.X; r++, i++) for (var c = 1; c < dots.Y; c++)
+            for (double r = 0; r < dots.X; r++, i++) for (double c = 1; c < dots.Y; c++)
             {
                 if (i > split && i < split * 2) break;
                 else if (i == split * 2) i = 1;
 
-                var rad = size * Sin(c / dots.Y * PI);
-                var basePos = new Vector3d(rad * Cos(r / dots.X * TwoPi), size * Cos(c / dots.Y * PI), rad * Sin(r / dots.X * TwoPi));
-                
-                var rotFunc = new Vector3d(DegreesToRadians(47.5), 0, DegreesToRadians(30));
+                var rad = size * Sin(c / dots.Y * Pi);
+                var basePos = new Vector3d(rad * Cos(r / dots.X * TwoPi), size * Cos(c / dots.Y * Pi), rad * Sin(r / dots.X * TwoPi));
+
+                var rotFunc = new Vector3d(DegreesToRadians(42.5), 0, DegreesToRadians(25));
                 var pos = Vector3d.Transform(basePos, new Quaterniond(rotFunc));
 
                 var sprite = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(0, (float)pos.Y + 240));
-                sprite.Fade(startTime + r * 30, startTime + r * 30 + beat * 2, 0, 1);
-                sprite.Fade(endTime - c * 30, endTime - c * 30 + beat * 4, 1, 0);
-                
-                var maxVal = new Keyframe<double>();
-                for (var f = 0d; f < 360; f += 36 / polling)
-                {
-                    pos = Vector3d.Transform(basePos, new Quaterniond(rotFunc.X, DegreesToRadians(f), rotFunc.Z));
-                    if (pos.X <= maxVal.Value) continue;
-                    maxVal = new Keyframe<double>(spinDur / 360 * f, pos.X);
-                }
+                sprite.Fade(start + r * 40, start + r * 40 + beat * 4, 0, 1);
+                sprite.Fade(end - c * 40, end - c * 40 + beat * 4, 1, 0);
 
-                var sTime = startTime + maxVal.Time - spinDur;
-                sprite.StartLoopGroup(sTime, (int)Ceiling((endTime + 1000 - sTime) / spinDur));
-                sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxVal.Value, 320 - maxVal.Value);
-                sprite.MoveX(OsbEasing.InOutSine, spinDur / 2, spinDur, 320 - maxVal.Value, 320 + maxVal.Value);
+                var sTime = start - spinDur * Atan2(pos.Z, pos.X) / TwoPi;
+                if (sTime > start + r * 40) sTime -= spinDur;
+                sprite.StartLoopGroup(sTime, (int)Ceiling((end - c * 40 + beat * 2 - sTime) / spinDur));
+
+                var maxRad = Sqrt(pos.X * pos.X + pos.Z * pos.Z);
+                sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxRad, 320 - maxRad);
+                sprite.MoveX(OsbEasing.InOutSine, spinDur / 2, spinDur, 320 - maxRad, 320 + maxRad);
                 sprite.EndGroup();
 
-                sprite.Scale(startTime, .03);
+                sprite.Scale(start, .03);
                 if (split > 0 && i == 1 || i == split)
                 {
-                    sprite.Color(startTime, 0, .75, 1);
-                    sprite.Additive(startTime);
+                    sprite.Color(start, 0, .75, 1);
+                    sprite.Additive(start);
 
-                    sprite.StartTriggerGroup("HitSoundClap", startTime, endTime);
+                    sprite.StartTriggerGroup("HitSoundClap", start, end);
                     sprite.Scale(0, beat / 2, .06, .03);
                     sprite.EndGroup();
                 }

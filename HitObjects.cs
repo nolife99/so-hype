@@ -32,17 +32,17 @@ namespace StorybrewScripts
         void DotBurst(int startTime, int endTime)
         {
             using (var pool = new SpritePool(GetLayer(""), "sb/d.png", true)) foreach (var hit in Beatmap.HitObjects) 
-                if (hit.StartTime >= startTime && hit.EndTime <= endTime) for (var i = 0; i < Random(15, 20); i++)
+                if (hit.StartTime >= startTime && hit.EndTime <= endTime) for (var i = 0; i < Random(20, 25); i++)
             {
                 var angle = Random(PI * 2);
-                var radius = Random(40f, 80);
+                var radius = Random(50f, 100);
 
                 var startPos = hit.Position + hit.StackOffset;
                 var endPos = new Vector2(radius * (float)Cos(angle) + startPos.X, radius * (float)Sin(angle) + startPos.Y);
                 var duration = Random(1000, 2000);
 
                 var sprite = pool.Get(hit.StartTime, hit.StartTime + duration);
-                sprite.Scale(OsbEasing.In, hit.StartTime, hit.StartTime + duration, radius * 6E-4, 0);
+                sprite.Scale(OsbEasing.InQuad, hit.StartTime, hit.StartTime + duration, radius * 5E-4, 0);
                 sprite.Move(OsbEasing.OutExpo, hit.StartTime, hit.StartTime + duration, startPos, endPos);
 
                 if ((Color4)sprite.ColorAt(hit.StartTime) != hit.Color) sprite.Color(hit.StartTime, hit.Color);
@@ -75,7 +75,7 @@ namespace StorybrewScripts
                         var slidePos = hit.PositionAtTime(sTime);
                         if (collect)
                         {   
-                            stepSprite.Move(OsbEasing.InBack, sTime, sTime + 1500, slidePos, new Vector2(320, 240));
+                            stepSprite.Move(OsbEasing.InExpo, sTime, sTime + 1500, slidePos, new Vector2(320, 240));
                             stepSprite.Color(OsbEasing.InQuart, sTime, sTime + 1500, hit.Color, Color4.White);
                         }
                         else 

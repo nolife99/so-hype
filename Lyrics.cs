@@ -44,7 +44,7 @@ namespace StorybrewScripts
                         var texture = font.GetTexture(letter.ToString());
                         if (!texture.IsEmpty)
                         {
-                            Vector2 position = new Vector2(letterX, 420) + texture.OffsetFor(OsbOrigin.Centre) * scale;
+                            var position = new Vector2(letterX, 420) + texture.OffsetFor(OsbOrigin.Centre) * scale;
                             if (!hasBox)
                             {
                                 var box = pool.Get(startTime, endTime, "sb/p.png", OsbOrigin.Centre, new Vector2(320, position.Y),
