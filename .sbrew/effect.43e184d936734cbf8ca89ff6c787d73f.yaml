@@ -13,6 +13,11 @@ Layers:
     OsbLayer: Background
     DiffSpecific: No
     Visible: Yes
+  e545302081cd4164b5ac5e92c33baff5:
+    Name: "diam"
+    OsbLayer: Background
+    DiffSpecific: No
+    Visible: Yes
   8c95405045ec4ec8b69233b4cd3fda31:
     Name: "Flash"
     OsbLayer: Background

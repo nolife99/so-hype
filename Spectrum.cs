@@ -45,7 +45,7 @@ namespace StorybrewScripts
             for (var i = 0; i < barCount; i++)
             {
                 var keyframe = fftKeyframes[i];
-                keyframe.Simplify1dKeyframes(4, h => h);
+                keyframe.Simplify1dKeyframes(5, h => h);
 
                 var bar = GetLayer("").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(basePos.X + i * barWidth, basePos.Y));
                 bar.Fade(StartTime, StartTime + 500, 0, .6);

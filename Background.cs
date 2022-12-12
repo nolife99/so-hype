@@ -77,7 +77,6 @@ namespace StorybrewScripts
             Flash(268716, 271507);
             FlashSequence(274298);
 
-            BlurBG(25926, 25926, 46856, 48251);
             MainBG(48949, 48949, 69879, 70577);
             BlurBG(104065, 104065, 126391, 126740);
             MainBG(126391, 126740, 145926, 147321);
@@ -138,19 +137,24 @@ namespace StorybrewScripts
 
         void Section1()
         {
-            var clap = GetLayer("BG").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
-            clap.Scale(0, 0);
-            clap.StartTriggerGroup("HitSoundClap", 25926, 37089);
-            clap.Fade(0, 1000, .75, 0);
-            clap.Scale(OsbEasing.OutQuad, 0, 1000, 475f / bitmapH, 480f / bitmapH);
-            clap.EndGroup();
+            var back = GetLayer("BG").CreateSprite("sb/p.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            back.ScaleVec(25926, 854, 480);
+            back.ColorHsb(25926, 30, .5, .5);
+            back.Fade(37089, 38484, .7, 0);
 
-            var finish = GetLayer("BG").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
-            finish.Scale(0, 0);
-            finish.StartTriggerGroup("HitSoundFinish", 25926, 37089);
-            finish.Fade(0, 1000, .9, 0);
-            finish.Scale(OsbEasing.OutQuad, 0, 1000, 475f / bitmapH, 480f / bitmapH);
-            finish.EndGroup();
+            var back2 = GetLayer("BG").CreateSprite("sb/p.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            back2.ColorHsb(37089, 190, .15, 1);
+            back2.ScaleVec(37089, 854, 480);
+            back2.Fade(37089, 38484, 0, .7);
+            back2.Fade(46856, 48600, .7, 0);
+
+            var diamond = GetLayer("diam").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
+            diamond.Scale(OsbEasing.OutQuint, 37089, 37786, 854, 100);
+            diamond.Fade(37089, 37437, 0, 1);
+            diamond.Rotate(OsbEasing.OutQuad, 37089, 37437, -Math.PI / 2, Math.PI / 4);
+            diamond.Rotate(OsbEasing.InQuart, 37437, 47554, Math.PI / 4, Math.PI * 10);
+            diamond.Scale(OsbEasing.InQuart, 45461, 47554, 100, 2000);
+            diamond.Fade(48251, 48949, 1, 0);
         }
         void Kiai1()
         {
