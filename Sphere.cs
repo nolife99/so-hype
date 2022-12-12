@@ -13,21 +13,21 @@ namespace StorybrewScripts
         {
             MakeSphere(73368, 92903, 130, 5, new Vector2i(36, 20), 18, sp =>
             {
-                sprite.Color(73368, 0, .75, 1);
-                sprite.Additive(73368);
+                sp.Color(73368, 0, .75, 1);
+                sp.Additive(73368);
 
-                sprite.StartTriggerGroup("HitSoundClap", 73368, 92903);
-                sprite.Scale(0, beat / 2, .06, .03);
-                sprite.EndGroup();
+                sp.StartTriggerGroup("HitSoundClap", 73368, 92903);
+                sp.Scale(0, beat / 2, .06, .03);
+                sp.EndGroup();
             });
             MakeSphere(126740, 145926, 130, 5, new Vector2i(36, 20), 15, sp =>
             {
-                sprite.Color(126740, 0, .75, 1);
-                sprite.Additive(126740);
+                sp.Color(126740, 0, .75, 1);
+                sp.Additive(126740);
 
-                sprite.StartTriggerGroup("HitSoundClap", 126740, 145926);
-                sprite.Scale(0, beat / 2, .06, .03);
-                sprite.EndGroup();
+                sp.StartTriggerGroup("HitSoundClap", 126740, 145926);
+                sp.Scale(0, beat / 2, .06, .03);
+                sp.EndGroup();
             });
         }
         void MakeSphere(int start, int end, double size, uint split, Vector2i dots, double spinMult, Action<OsbSprite> action = null)
