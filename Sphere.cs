@@ -27,8 +27,8 @@ namespace StorybrewScripts
             var beat = Beatmap.GetTimingPointAt(start).BeatDuration;
             var spinDur = beat * spinMult;
 
-            var back = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(323, 257));
-            back.Scale(OsbEasing.OutBack, start, start + beat * 4, 0, 5.1);
+            var back = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(316, 238));
+            back.Scale(OsbEasing.OutBack, start, start + beat * 4, 0, 5.2);
             back.Color(start, 0, 0, 0);
             back.Fade(OsbEasing.In, end, end + beat * 4, .85, 0);
 
@@ -50,7 +50,7 @@ namespace StorybrewScripts
 
                 var sTime = start - spinDur * Atan2(pos.Z, pos.X) / TwoPi;
                 if (sTime > start + r * 40) sTime -= spinDur;
-                sprite.StartLoopGroup(sTime, (int)Ceiling((end - c * 40 + beat * 2 - sTime) / spinDur));
+                sprite.StartLoopGroup(sTime, (int)Ceiling((end - c * 40 + beat * 4 - sTime) / spinDur));
 
                 var maxRad = Sqrt(pos.X * pos.X + pos.Z * pos.Z);
                 sprite.MoveX(OsbEasing.InOutSine, 0, spinDur / 2, 320 + maxRad, 320 - maxRad);
