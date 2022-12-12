@@ -11,18 +11,26 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            MakeSphere(73368, 92903, 130, 5, new Vector2i(36, 20), 18);
-            MakeSphere(126740, 145926, 130, 5, new Vector2i(36, 20), 15);
-        }
+            MakeSphere(73368, 92903, 130, 5, new Vector2i(36, 20), 18, sp =>
+            {
+                sprite.Color(73368, 0, .75, 1);
+                sprite.Additive(73368);
 
-        ///<summary> Generates a transformed sphere that rotates about the yaw axis </summary>
-        ///<param name="start"> Start time of the object </param>
-        ///<param name="end"> End time of the object </param>
-        ///<param name="size"> Size multiplier of the object </param>
-        ///<param name="split"> Amount of dots between equal splits </param>
-        ///<param name="dots"> X and Y subdivisions of the object <para>Should be positive integers</para></param>
-        ///<param name="spinMult"> Spin duration multiplier of the object </param>
-        void MakeSphere(int start, int end, double size, uint split, Vector2i dots, double spinMult)
+                sprite.StartTriggerGroup("HitSoundClap", 73368, 92903);
+                sprite.Scale(0, beat / 2, .06, .03);
+                sprite.EndGroup();
+            });
+            MakeSphere(126740, 145926, 130, 5, new Vector2i(36, 20), 15, sp =>
+            {
+                sprite.Color(126740, 0, .75, 1);
+                sprite.Additive(126740);
+
+                sprite.StartTriggerGroup("HitSoundClap", 126740, 145926);
+                sprite.Scale(0, beat / 2, .06, .03);
+                sprite.EndGroup();
+            });
+        }
+        void MakeSphere(int start, int end, double size, uint split, Vector2i dots, double spinMult, Action<OsbSprite> action = null)
         {
             var beat = Beatmap.GetTimingPointAt(start).BeatDuration;
             var spinDur = beat * spinMult;
@@ -58,15 +66,7 @@ namespace StorybrewScripts
                 sprite.EndGroup();
 
                 sprite.Scale(start, .03);
-                if (split > 0 && i == 1 || i == split)
-                {
-                    sprite.Color(start, 0, .75, 1);
-                    sprite.Additive(start);
-
-                    sprite.StartTriggerGroup("HitSoundClap", start, end);
-                    sprite.Scale(0, beat / 2, .06, .03);
-                    sprite.EndGroup();
-                }
+                if (split > 0 && i == 1 || i == split && action != null) action(sprite); 
             }
         }
     }
