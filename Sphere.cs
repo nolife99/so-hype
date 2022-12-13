@@ -12,7 +12,7 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            MakeSphere(25926, 37089, 130, 5, new Vector2i(36, 22), 22.5, (sp, s, e) =>
+            MakeSphere(25926, 37089, 130, 5, new Vector2i(36, 20), 22.5, (sp, s, e) =>
             {
                 var beat = Beatmap.GetTimingPointAt(s).BeatDuration;
                 sp.ColorHsb(s, 30, .8, 1);
@@ -22,7 +22,7 @@ namespace StorybrewScripts
                 sp.Scale(0, beat / 2, .06, .03);
                 sp.EndGroup();
             });
-            MakeSphere(73368, 92903, 130, 5, new Vector2i(36, 22), 20, (sp, s, e) =>
+            MakeSphere(73368, 92903, 130, 5, new Vector2i(36, 20), 20, (sp, s, e) =>
             {
                 var beat = Beatmap.GetTimingPointAt(s).BeatDuration;
                 sp.Color(s, 0, .75, 1);

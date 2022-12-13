@@ -78,7 +78,6 @@ namespace StorybrewScripts
             FlashSequence(274298);
 
             MainBG(48949, 48949, 69879, 70577);
-            BlurBG(104065, 104065, 126391, 126740);
             MainBG(126391, 126740, 145926, 147321);
             BlurBG(145926, 147321, 151158, 151158);
             MainBG(151507, 151507, 172437, 173833);
@@ -149,11 +148,11 @@ namespace StorybrewScripts
             back2.Fade(46856, 48600, .7, 0);
 
             var diamond = GetLayer("diam").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
-            diamond.Scale(OsbEasing.OutQuint, 37089, 37786, 854, 100);
+            diamond.Scale(OsbEasing.OutQuint, 37089, 37786, 854, 130);
             diamond.Fade(37089, 37437, 0, 1);
-            diamond.Rotate(OsbEasing.OutQuad, 37089, 37437, -Math.PI / 2, Math.PI / 4);
+            diamond.Rotate(OsbEasing.OutQuad, 37089, 37437, -Math.PI / 4, Math.PI / 4);
             diamond.Rotate(OsbEasing.InQuart, 37437, 47554, Math.PI / 4, Math.PI * 10);
-            diamond.Scale(OsbEasing.InQuart, 45461, 47554, 100, 2000);
+            diamond.Scale(OsbEasing.InQuart, 45461, 47554, 130, 2000);
             diamond.Fade(48251, 48949, 1, 0);
         }
         void Kiai1()
@@ -185,22 +184,9 @@ namespace StorybrewScripts
             back.Fade(OsbEasing.In, 0, beat * 2, .9, .7);
             back.EndGroup();
             back.Fade(92903, 94298, .7, 0);
-
-            var snare = GetLayer("BG").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
-            snare.StartLoopGroup(104065, (112437 - 104065) / beat);
-            snare.Scale(OsbEasing.OutQuad, 0, beat, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat, .8, 0);
-            snare.EndGroup();
-            
-            snare.StartLoopGroup(112437, (113833 - 112437) / (beat / 2));
-            snare.Scale(OsbEasing.OutQuad, 0, beat / 2, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat / 2, .8, 0);
-            snare.EndGroup();
-
-            snare.StartLoopGroup(115577, (126565 - 115577) / beat);
-            snare.Scale(OsbEasing.OutQuad, 0, beat, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat, .8, 0);
-            snare.EndGroup();
+            back.Fade(104065, .7);
+            back.ColorHsb(113833, 115577, 190, .15, 1, 20, .15, 1);
+            back.Fade(126391, 126740, .7, 0);
         }
         void Kiai2()
         {
