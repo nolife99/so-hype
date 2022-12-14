@@ -49,7 +49,7 @@ namespace StorybrewScripts
                 var keyframe = new KeyframedValue<Vector2>();
 
                 var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 4;
-                for (var time = (double)startTime; time < endTime + timeStep; time += timeStep)
+                for (double time = startTime; time < endTime + timeStep; time += timeStep)
                 {
                     angle -= 0.06;
 
@@ -112,7 +112,7 @@ namespace StorybrewScripts
         }
         void BeatShapes(int start, int end, bool circ = false)
         {
-            for (int i = 0; i < (circ ? 20 : 30); i++)
+            for (var i = 0; i < (circ ? 20 : 30); i++)
             {
                 var timeStep = Beatmap.GetTimingPointAt(start).BeatDuration;
                 var realStart = start + timeStep * (i / 2);
@@ -177,8 +177,8 @@ namespace StorybrewScripts
                     (float)(pos.X + Cos(angle) * scaleEnd),
                     (float)(pos.Y + Sin(angle) * scaleEnd));
 
-                double startScale = Sqrt(scaleStart * scaleStart + scaleStart * scaleStart);
-                double endScale = Sqrt(scaleEnd * scaleEnd + scaleEnd * scaleEnd);
+                var startScale = Sqrt(scaleStart * scaleStart + scaleStart * scaleStart);
+                var endScale = Sqrt(scaleEnd * scaleEnd + scaleEnd * scaleEnd);
 
                 var border = GetLayer("BeatScale").CreateSprite("sb/p.png", OsbOrigin.BottomCentre);
                 border.Rotate(startTime, angle - Pi / 4);
@@ -204,14 +204,15 @@ namespace StorybrewScripts
                 {
                     for (var i = start; i < end - 800; i += 15)
                     {
-                        var duration = Random(1000, 2200);
+                        var duration = Random(1250, 2500);
                         var top = Random(0, 2) % 2 == 0;
                         var fade = Random(.25, .5);
                         var endPos = top ? new Vector2(320, 0) : new Vector2(320, 480);
                         var sprite = pool.Get(i, i + duration);
 
                         sprite.Fade(i, i + 300, 0, fade);
-                        sprite.Move(i, i + duration, new Vector2(Random(-107, 747), 240), endPos);
+                        sprite.MoveX(OsbEasing.InOutSine, i, i + duration, Random(-107, 747), endPos.X);
+                        sprite.MoveY(OsbEasing.OutSine, i, i + duration, 240, endPos.Y);
                         if (i + duration < end) sprite.Fade(i + duration - 300, i + duration, fade, 0);
                         else if (i + duration > end && sprite.OpacityAt(end - 500) >= fade && 
                         sprite.PositionAt(end - 500).Y != 480 || sprite.PositionAt(end - 500).Y != 0) 
