@@ -18,6 +18,11 @@ Layers:
     OsbLayer: Background
     DiffSpecific: No
     Visible: Yes
+  4518a5eff2904554976ed5a5dd3f6498:
+    Name: "???"
+    OsbLayer: Background
+    DiffSpecific: No
+    Visible: Yes
   8c95405045ec4ec8b69233b4cd3fda31:
     Name: "Flash"
     OsbLayer: Background

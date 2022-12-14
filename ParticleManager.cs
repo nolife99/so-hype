@@ -1,5 +1,4 @@
 using OpenTK;
-using OpenTK.Graphics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Animations;
@@ -23,7 +22,6 @@ namespace StorybrewScripts
             PulsingSquare(104065, 113833);
 
             RotatingLines();
-            SpectrumParticles();
         }
         void RotatingLines()
         {
@@ -91,10 +89,10 @@ namespace StorybrewScripts
                 sprite.ColorHsb(start, 0, 0, Random(1f));
                 sprite.StartLoopGroup(start + i * 70, (end - (start + i * 35)) / duration);
                 sprite.Additive(0, duration);
-                sprite.Fade(0, fadeTime, 0, fade);
-                sprite.Fade(duration - fadeTime, duration, fade, 0);
+                sprite.Fade(OsbEasing.Out, 0, fadeTime, 0, fade);
+                sprite.Fade(OsbEasing.In, duration - fadeTime, duration, fade, 0);
                 sprite.Scale(0, duration, Random(.025, .05), Random(.025, .05));
-                sprite.MoveY(0, duration, Random(400, 500), Random(-20, 0));
+                sprite.MoveY(OsbEasing.In, 0, duration, Random(400, 500), Random(-20, 0));
 
                 var shift = Random(50, 150);
                 if (startX >= 320)
@@ -189,38 +187,6 @@ namespace StorybrewScripts
                     border.Fade(OsbEasing.In, s, s + timeStep, 0.8, 0);
                 }
                 angle += Pi / 2;
-            }
-        }
-        void SpectrumParticles()
-        {
-            using (var pool = new SpritePool(GetLayer("specPart"), "sb/p.png", (sprite, start, end) =>
-            {
-                sprite.Scale(start, Random(5, 20));
-                sprite.Rotate(start, Pi / 4 + (Random(-.1, .1)));
-                sprite.Additive(start);
-            }))
-            {
-                System.Action<int, int> SpectrumParticle = (start, end) =>
-                {
-                    for (var i = start; i < end - 800; i += 15)
-                    {
-                        var duration = Random(1250, 2500);
-                        var top = Random(0, 2) % 2 == 0;
-                        var fade = Random(.25, .5);
-                        var endPos = top ? new Vector2(320, 0) : new Vector2(320, 480);
-                        var sprite = pool.Get(i, i + duration);
-
-                        sprite.Fade(i, i + 300, 0, fade);
-                        sprite.MoveX(OsbEasing.InOutSine, i, i + duration, Random(-107, 747), endPos.X);
-                        sprite.MoveY(OsbEasing.OutSine, i, i + duration, 240, endPos.Y);
-                        if (i + duration < end) sprite.Fade(i + duration - 300, i + duration, fade, 0);
-                        else if (i + duration > end && sprite.OpacityAt(end - 500) >= fade && 
-                        sprite.PositionAt(end - 500).Y != 480 || sprite.PositionAt(end - 500).Y != 0) 
-                        sprite.Fade(end - 500, end, fade, 0);
-                    }
-                };
-                SpectrumParticle(151507, 172437);
-                SpectrumParticle(48949, 69182);
             }
         }
     }

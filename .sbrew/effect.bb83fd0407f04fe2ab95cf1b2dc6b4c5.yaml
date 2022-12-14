@@ -8,11 +8,6 @@ Config:
     Value: "0"
     DisplayName: "Random seed"
 Layers:
-  648b30e2a29c495ba29dfcfe7b3fc2a2:
-    Name: "specPart"
-    OsbLayer: Background
-    DiffSpecific: No
-    Visible: Yes
   b6ebe318c3ad4c6a8b205b2fad8fadd6:
     Name: "beat"
     OsbLayer: Background

@@ -68,7 +68,7 @@ namespace StorybrewScripts
             Flash(168251, 169647, .8);
             Flash(173833, 175228, .8);
             Flash(179414, 180809, .5);
-            Flash(184996, 189182, .5);
+            Flash(184996, 189182);
             Flash(240809, 241507, .6);
             Flash(251972, 254763, .7);
             Flash(258251, 260344);
@@ -183,7 +183,7 @@ namespace StorybrewScripts
             back.StartLoopGroup(73716, (93251 - 73716) / (beat * 2));
             back.Fade(OsbEasing.In, 0, beat * 2, .9, .7);
             back.EndGroup();
-            back.Fade(92903, 94298, .7, 0);
+            back.Fade(93251, 94298, .7, 0);
             back.Fade(104065, .7);
             back.ColorHsb(113833, 115577, 190, .15, 1, 20, .15, 1);
             back.Fade(126391, 126740, .7, 0);
@@ -245,6 +245,22 @@ namespace StorybrewScripts
             snare.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
             snare.Fade(0, beat * 2, .8, 0);
             snare.EndGroup();
+
+            var diamond = GetLayer("???").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
+            diamond.Scale(OsbEasing.OutCubic, 156740, 157263, 0, 150);
+            diamond.Rotate(OsbEasing.OutBack, 156740, 157263, 0, Math.PI / 4 * 5);
+            diamond.Scale(OsbEasing.InQuad, 157263, 157437, 150, 944);
+            diamond.Scale(157437, 0);
+
+            diamond.Scale(OsbEasing.OutBack, 161972, 162234, 0, 50);
+            diamond.Scale(OsbEasing.OutBack, 162234, 162408, 50, 150);
+            diamond.Scale(OsbEasing.InBack, 162408, 162670, 150, 944);
+            diamond.Scale(162670, 0);
+
+            diamond.Scale(OsbEasing.OutBack, 183600, 183949, 0, 50);
+            diamond.Scale(OsbEasing.OutBack, 183949, 184298, 50, 100);
+            diamond.Scale(OsbEasing.OutBack, 184298, 184647, 100, 150);
+            diamond.Scale(OsbEasing.InQuart, 184647, 184996, 150, 944);
         }
 
         #endregion
