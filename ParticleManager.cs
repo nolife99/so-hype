@@ -13,7 +13,7 @@ namespace StorybrewScripts
         protected override void Generate()
         {
             RingRise(25926, 42670);
-		    RingRise(73368, 92903);
+            RingRise(73368, 92903);
             RingRise(104065, 113833);
             BeatShapes(48949, 64996);
             BeatShapes(115577, 145926);
