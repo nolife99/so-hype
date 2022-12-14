@@ -38,7 +38,8 @@ namespace StorybrewScripts
                 var radius = Random(50f, 100);
 
                 var startPos = hit.Position + hit.StackOffset;
-                var endPos = new Vector2(radius * (float)Cos(angle) + startPos.X, radius * (float)Sin(angle) + startPos.Y);
+                var endPos = new Vector2((int)(radius * Cos(angle) + startPos.X), (int)(radius * Sin(angle) + startPos.Y));
+
                 var duration = Random(1000, 2000);
 
                 var sprite = pool.Get(hit.StartTime, hit.StartTime + duration);

@@ -151,8 +151,8 @@ namespace StorybrewScripts
             diamond.Scale(OsbEasing.OutQuint, 37089, 37786, 854, 130);
             diamond.Fade(37089, 37437, 0, 1);
             diamond.Rotate(OsbEasing.OutQuad, 37089, 37437, -Math.PI / 4, Math.PI / 4);
-            diamond.Rotate(OsbEasing.InQuart, 37437, 47554, Math.PI / 4, Math.PI * 10);
-            diamond.Scale(OsbEasing.InQuart, 45461, 47554, 130, 2000);
+            diamond.Rotate(OsbEasing.InOutSine, 37437, 47554, Math.PI / 4, Math.PI * 20);
+            diamond.Scale(OsbEasing.InOutSine, 45461, 47554, 130, 854);
             diamond.Fade(48251, 48949, 1, 0);
         }
         void Kiai1()

@@ -1,6 +1,8 @@
 using OpenTK;
+using OpenTK.Graphics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
+using StorybrewCommon.Animations;
 
 using static StorybrewCommon.OpenTKUtil.MathHelper;
 
@@ -19,6 +21,59 @@ namespace StorybrewScripts
             BeatShapes(258251, 265926);
             BeatShapes(268716, 274298);
             PulsingSquare(104065, 113833);
+
+            RotatingLines();
+            SpectrumParticles();
+        }
+        void RotatingLines()
+        {
+            var startTime = 73368;
+            var endTime = 92903;
+            var amount = 20;
+            double angle = 90;
+            double radius = 150;
+
+            for (var i = 0; i < amount; i++)
+            {
+                var ConnectionAngle = Pi / amount * 1.5;
+
+                var position = new Vector2(
+                    (float)(320 + Cos(angle) * radius),
+                    (float)(240 + Sin(angle) * radius));
+
+                var lines = GetLayer("RotLines").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(0, 0));
+
+                lines.ScaleVec(startTime, 1.5, 20);
+                lines.Fade(endTime, endTime + 1000, 1, 0);
+
+                var keyframe = new KeyframedValue<Vector2>();
+
+                var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 4;
+                for (var time = (double)startTime; time < endTime + timeStep; time += timeStep)
+                {
+                    angle -= 0.06;
+
+                    var nPosition = new Vector2(
+                        (float)(320 + Cos(angle) * radius),
+                        (float)(240 + Sin(angle) * radius));
+
+                    keyframe.Add(time, position);
+
+                    position = nPosition;
+                }
+                angle += ConnectionAngle / (amount / 3);
+
+                keyframe.Simplify2dKeyframes(.9, v => v);
+                keyframe.ForEachPair((start, end) => lines.Move(start.Time, end.Time, start.Value, end.Value));
+
+                var pos = new Vector2(
+                    (float)(320 + Cos(angle) * radius),
+                    (float)(240 + Sin(angle) * radius));
+
+                var Rotation = Atan2(position.Y - pos.Y, position.X - pos.X) - Pi;
+
+                lines.Rotate(startTime, endTime, Rotation, Rotation - Pi * 2);
+            }
         }
         void RingRise(int start, int end)
         {
@@ -98,14 +153,14 @@ namespace StorybrewScripts
             var easing = OsbEasing.OutQuad;
             var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration;
 
-            var pix = GetLayer("BeatScale").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
+            var Pix = GetLayer("BeatScale").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
             for (double i = startTime; i < endTime - 1; i += timeStep)
             {
-                pix.Scale(easing, i, i + timeStep, 125, 85);
-                pix.Fade(easing, i, i + timeStep, 0.5, 1);
+                Pix.Scale(easing, i, i + timeStep, 125, 85);
+                Pix.Fade(easing, i, i + timeStep, 0.5, 1);
             }
-            pix.Rotate(startTime, MathHelper.DegreesToRadians(45));
-            pix.Scale(easing, endTime, endTime + timeStep, 140, 0);
+            Pix.Rotate(startTime, MathHelper.DegreesToRadians(45));
+            Pix.Scale(easing, endTime, endTime + timeStep, 140, 0);
 
             double angle = 0;
             var scaleStart = 85;
@@ -125,15 +180,46 @@ namespace StorybrewScripts
                 double startScale = Sqrt(scaleStart * scaleStart + scaleStart * scaleStart);
                 double endScale = Sqrt(scaleEnd * scaleEnd + scaleEnd * scaleEnd);
 
-                var pixOut = GetLayer("BeatScale").CreateSprite("sb/p.png", OsbOrigin.BottomCentre);
-                pixOut.Rotate(startTime, angle - Pi / 4);
+                var border = GetLayer("BeatScale").CreateSprite("sb/p.png", OsbOrigin.BottomCentre);
+                border.Rotate(startTime, angle - Pi / 4);
                 for (double s = startTime; s < endTime - 1; s += timeStep)
                 {
-                    pixOut.ScaleVec(easing, s, s + timeStep, 1.23, startScale + 0.5, 0.6, endScale);
-                    pixOut.Move(easing, s, s + timeStep, startPos, endPos);
-                    pixOut.Fade(OsbEasing.In, s, s + timeStep, 0.8, 0);
+                    border.ScaleVec(easing, s, s + timeStep, 1.23, startScale + 0.5, 0.6, endScale);
+                    border.Move(easing, s, s + timeStep, startPos, endPos);
+                    border.Fade(OsbEasing.In, s, s + timeStep, 0.8, 0);
                 }
                 angle += Pi / 2;
+            }
+        }
+        void SpectrumParticles()
+        {
+            using (var pool = new SpritePool(GetLayer("specPart"), "sb/p.png", (sprite, start, end) =>
+            {
+                sprite.Scale(start, Random(5, 20));
+                sprite.Rotate(start, Pi / 4 + (Random(-.1, .1)));
+                sprite.Additive(start);
+            }))
+            {
+                System.Action<int, int> SpectrumParticle = (start, end) =>
+                {
+                    for (var i = start; i < end - 800; i += 15)
+                    {
+                        var duration = Random(1000, 2200);
+                        var top = Random(0, 2) % 2 == 0;
+                        var fade = Random(.25, .5);
+                        var endPos = top ? new Vector2(320, 0) : new Vector2(320, 480);
+                        var sprite = pool.Get(i, i + duration);
+
+                        sprite.Fade(i, i + 300, 0, fade);
+                        sprite.Move(i, i + duration, new Vector2(Random(-107, 747), 240), endPos);
+                        if (i + duration < end) sprite.Fade(i + duration - 300, i + duration, fade, 0);
+                        else if (i + duration > end && sprite.OpacityAt(end - 500) >= fade && 
+                        sprite.PositionAt(end - 500).Y != 480 || sprite.PositionAt(end - 500).Y != 0) 
+                        sprite.Fade(end - 500, end, fade, 0);
+                    }
+                };
+                SpectrumParticle(151507, 172437);
+                SpectrumParticle(48949, 69182);
             }
         }
     }

@@ -11,7 +11,7 @@ namespace StorybrewScripts
         protected override void Generate()
         {
             MakeLinear(48949, 70577);
-            MakeLinear(126740, 145926);
+            MakeRadial(126740, 145926);
             MakeLinear(151507, 173833);
             MakeLinear(258251, 279879);
         }
@@ -28,7 +28,6 @@ namespace StorybrewScripts
 
             var timeStep = Beatmap.GetTimingPointAt(StartTime).BeatDuration / 8;
             var offset = timeStep * .2;
-            
             for (double t = StartTime; t <= EndTime + 10; t += timeStep)
             {
                 var fft = GetFft(t + offset, fftCount, null, OsbEasing.InExpo);
@@ -52,8 +51,49 @@ namespace StorybrewScripts
                 bar.Fade(EndTime - 500, EndTime, .6, 0);
                 bar.Additive(StartTime);
 
-                keyframe.ForEachPair((s, e) => bar.ScaleVec(s.Time, e.Time, scale.X, s.Value, scale.X, e.Value),
-                    1, s => (int)s);
+                keyframe.ForEachPair((s, e) => bar.ScaleVec(s.Time, e.Time, scale.X, s.Value, scale.X, e.Value), 1, s => (int)s);
+            }
+        }
+        void MakeRadial(int startTime, int endTime)
+        {
+            var BarCount = 28;
+            var fftCount = (int)(BarCount * 1.5);
+            var scale = new Vector2(7.5f, 200);
+            var Position = new Vector2(320, 240);
+            var radius = 125;
+
+            var height = new KeyframedValue<float>[fftCount];
+            for (var i = 0; i < fftCount; i++) height[i] = new KeyframedValue<float>(null);
+            
+            var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 6;
+            var offset = timeStep * .2;
+            for (double t = startTime; t <= endTime + 10; t += timeStep)
+            {
+                var fft = GetFft(t + offset, fftCount, null, OsbEasing.InExpo);
+                for (var i = 0; i < fftCount; i++)
+                {
+                    var val = Log10(1 + fft[i] * 5) * scale.Y;
+                    if (val < 1) val = 1;
+
+                    height[i].Add(t, (float)val);
+                }
+            }
+
+            for (var i = 0; i < BarCount; i++)
+            {
+                var keyframe = height[i];
+                keyframe.Simplify1dKeyframes(5, h => h);
+
+                var bar = GetLayer("").CreateSprite("sb/p.png", OsbOrigin.BottomCentre, new Vector2(
+                    (float)(Position.X + radius * Cos(i * 2 * PI / BarCount)), 
+                    (float)(Position.Y + radius * Sin(i * 2 * PI / BarCount))));
+                
+                bar.Additive(startTime);
+                bar.Rotate(startTime, i * 2 * PI / BarCount + PI / 2);
+                bar.Fade(startTime, .75);
+                bar.Fade(endTime, endTime + 200, .75, 0);
+
+                keyframe.ForEachPair((s, e) => bar.ScaleVec(s.Time, e.Time, scale.X, s.Value, scale.X, e.Value), 1, s => (int)s);
             }
         }
     }
