@@ -28,6 +28,8 @@ namespace StorybrewScripts
             Trail(258251, 265839);
             DotBurst(265926, 268368);
             Trail(268716, 278571);
+
+            BackHL(191972, 227026);
         }
         void DotBurst(int startTime, int endTime)
         {
@@ -90,6 +92,19 @@ namespace StorybrewScripts
                         sTime += timestep;
                     }
                 }
+            }
+        }
+        void BackHL(int startTime, int endTime)
+        {
+            using (var pool = new SpritePool(GetLayer("BG"), "sb/hl.png", new Vector2(320, 530), (flash, start, end) =>
+            {
+                flash.Additive(start);
+                flash.Scale(start, 10);
+            }))
+            foreach (var hit in Beatmap.HitObjects) if (hit.StartTime >= startTime - 5 && hit.StartTime <= endTime + 5)
+            {
+                var flash = pool.Get(hit.StartTime, hit.EndTime + 500);
+                flash.Fade(hit.StartTime, hit.EndTime + 500, .125, 0);
             }
         }
     }

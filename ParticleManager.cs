@@ -20,6 +20,8 @@ namespace StorybrewScripts
             BeatShapes(258251, 265926);
             BeatShapes(268716, 274298);
             PulsingSquare(104065, 113833);
+            PulsingSquare(115577, 126391);
+            PulsingSquare(173833, 183600);
 
             RotatingLines();
         }
@@ -151,14 +153,14 @@ namespace StorybrewScripts
             var easing = OsbEasing.OutQuad;
             var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration;
 
-            var Pix = GetLayer("BeatScale").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
+            var sprite = GetLayer("beat").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
             for (double i = startTime; i < endTime - 1; i += timeStep)
             {
-                Pix.Scale(easing, i, i + timeStep, 125, 85);
-                Pix.Fade(easing, i, i + timeStep, 0.5, 1);
+                sprite.Scale(easing, i, i + timeStep, 125, 85);
+                sprite.Fade(easing, i, i + timeStep, .8, 1);
             }
-            Pix.Rotate(startTime, MathHelper.DegreesToRadians(45));
-            Pix.Scale(easing, endTime, endTime + timeStep, 140, 0);
+            sprite.Rotate(startTime, DegreesToRadians(45));
+            sprite.Scale(easing, endTime, endTime + timeStep, 140, 0);
 
             double angle = 0;
             var scaleStart = 85;
@@ -178,7 +180,7 @@ namespace StorybrewScripts
                 var startScale = Sqrt(scaleStart * scaleStart + scaleStart * scaleStart);
                 var endScale = Sqrt(scaleEnd * scaleEnd + scaleEnd * scaleEnd);
 
-                var border = GetLayer("BeatScale").CreateSprite("sb/p.png", OsbOrigin.BottomCentre);
+                var border = GetLayer("beat").CreateSprite("sb/p.png", OsbOrigin.BottomCentre);
                 border.Rotate(startTime, angle - Pi / 4);
                 for (double s = startTime; s < endTime - 1; s += timeStep)
                 {

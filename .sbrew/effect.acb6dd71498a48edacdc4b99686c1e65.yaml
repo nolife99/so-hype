@@ -8,6 +8,11 @@ Config:
     Value: "0"
     DisplayName: "Random seed"
 Layers:
+  6f45c518cce74f018b92c2ae7ac9e480:
+    Name: "BG"
+    OsbLayer: Background
+    DiffSpecific: No
+    Visible: Yes
   5b230e683d0d4f308c3b27c7854acc04:
     Name: ""
     OsbLayer: Background

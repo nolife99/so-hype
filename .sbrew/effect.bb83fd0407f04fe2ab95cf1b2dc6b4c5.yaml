@@ -13,11 +13,6 @@ Layers:
     OsbLayer: Background
     DiffSpecific: No
     Visible: Yes
-  7226c96386404b62af422d60c90129d7:
-    Name: "BeatScale"
-    OsbLayer: Background
-    DiffSpecific: No
-    Visible: Yes
   43da5f2baf254979a95509d142b4faff:
     Name: ""
     OsbLayer: Background

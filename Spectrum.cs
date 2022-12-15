@@ -10,48 +10,57 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            MakeLinear(48949, 70577);
+            MakeSpectrum(48949, 70577);
             MakeRadial(126740, 145926);
-            MakeLinear(151507, 173833);
-            MakeLinear(258251, 279879);
+            MakeSpectrum(151507, 173833);
+            MakeSpectrum(258251, 279879);
         }
-        void MakeLinear(int StartTime, int EndTime)
+        void MakeSpectrum(int startTime, int endTime)
         {
-            var scale = new Vector2(17.5f, 100);
-            var basePos = new Vector2(-96, 240);
+            var bMap = GetMapsetBitmap("sb/l.png");
+            var BarCount = 18;
+            var fftCount = BarCount * 2;
+            var scale = new Vector2(10, 150);
+            var basePos = new Vector2(-50, 470);
 
-            var barCount = 35;
-            var fftCount = barCount * 2;
+            var keyframes = new KeyframedValue<float>[fftCount];
+            for (var i = 0; i < fftCount; i++) keyframes[i] = new KeyframedValue<float>(null);
 
-            var fftKeyframes = new KeyframedValue<float>[fftCount];
-            for (var i = 0; i < fftCount; i++) fftKeyframes[i] = new KeyframedValue<float>(null);
+            var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 8;
+            var fftOffset = timeStep * .2;
 
-            var timeStep = Beatmap.GetTimingPointAt(StartTime).BeatDuration / 8;
-            var offset = timeStep * .2;
-            for (double t = StartTime; t <= EndTime + 10; t += timeStep)
+            for (var time = (double)startTime; time < endTime; time += timeStep)
             {
-                var fft = GetFft(t + offset, fftCount, null, OsbEasing.InExpo);
+                var fft = GetFft(time + fftOffset, fftCount, null, OsbEasing.InExpo);
                 for (var i = 0; i < fftCount; i++)
                 {
-                    var height = Pow(Log10(1 + fft[i] * 15), 1.5) * scale.Y;
+                    var height = Pow(Log10(1 + fft[i] * 470), 1.5) * scale.Y / bMap.Height;
                     if (height < 1) height = 1;
 
-                    fftKeyframes[i].Add(t, (float)height);
+                    keyframes[i].Add(time, (float)height);
                 }
             }
 
-            var barWidth = 856f / barCount;
-            for (var i = 0; i < barCount; i++)
+            var width = 800 / BarCount;
+            for (var i = 0; i < BarCount; i++)
             {
-                var keyframe = fftKeyframes[i];
-                keyframe.Simplify1dKeyframes(5, h => h);
+                var keyframe = keyframes[i];
+                keyframe.Simplify1dKeyframes(2, f => f);
 
-                var bar = GetLayer("").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(basePos.X + i * barWidth, basePos.Y));
-                bar.Fade(StartTime, StartTime + 500, 0, .6);
-                bar.Fade(EndTime - 500, EndTime, .6, 0);
-                bar.Additive(StartTime);
+                var sprite = GetLayer("").CreateSprite("sb/l.png", OsbOrigin.Centre, new Vector2(basePos.X + i * width, basePos.Y));
+                sprite.Fade(OsbEasing.Out, startTime, startTime + 500, 0, .5);
+                sprite.Fade(OsbEasing.In, endTime - 500, endTime, .5, 0);
+                sprite.Additive(startTime);
 
-                keyframe.ForEachPair((s, e) => bar.ScaleVec(s.Time, e.Time, scale.X, s.Value, scale.X, e.Value), 1, s => (int)s);
+                var scaleX = scale.X * width / bMap.Width; scaleX = (float)Floor(scaleX * 10) / 10f;
+
+                var hasScale = false;
+                keyframe.ForEachPair((start, end) =>
+                {
+                    hasScale = true;
+                    sprite.ScaleVec(start.Time, end.Time, scaleX, start.Value, scaleX, end.Value);
+                }, 1, s => (int)s);
+                if (!hasScale) sprite.ScaleVec(startTime, scaleX, 1);
             }
         }
         void MakeRadial(int startTime, int endTime)
