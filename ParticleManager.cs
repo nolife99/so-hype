@@ -14,6 +14,7 @@ namespace StorybrewScripts
             RingRise(25926, 42670);
             RingRise(73368, 92903);
             RingRise(104065, 113833);
+            RingRise(229647, 249182);
             BeatShapes(48949, 64996);
             BeatShapes(115577, 145926);
             BeatShapes(151507, 172437, true);
@@ -22,6 +23,7 @@ namespace StorybrewScripts
             PulsingSquare(104065, 113833);
             PulsingSquare(115577, 126391);
             PulsingSquare(173833, 183600);
+            PulsingSquare(229647, 249182);
 
             RotatingLines();
         }

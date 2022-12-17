@@ -29,7 +29,9 @@ namespace StorybrewScripts
             DotBurst(265926, 268368);
             Trail(268716, 278571);
 
+            BackHL(93251, 103542);
             BackHL(191972, 227026);
+            BackHL(281275, 300984);
         }
         void DotBurst(int startTime, int endTime)
         {
