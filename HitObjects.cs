@@ -11,23 +11,23 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            Trail(25926, 37001);
+            Trail(25926, 37001, true);
             DotBurst(42670, 46856);
             DotBurst(73368, 92903);
-            Trail(48949, 69269);
+            OriginateLaser(48949, 69269);
             Trail(115228, 115228);
             DotBurst(115577, 126304);
             Trail(120461, 120461);
             Trail(126391, 145926, true);
             DotBurst(148019, 151158);
-            Trail(151507, 173746);
+            OriginateLaser(151507, 173746);
             DotBurst(173833, 183513);
             Trail(179414, 184908);
             Trail(240809, 251886);
             DotBurst(247089, 251886);
-            Trail(258251, 265839);
+            OriginateLaser(258251, 265839);
             DotBurst(265926, 268368);
-            Trail(268716, 278571);
+            OriginateLaser(268716, 278571);
 
             BackHL(93251, 103542);
             BackHL(191972, 227026);
@@ -94,6 +94,29 @@ namespace StorybrewScripts
                         sTime += timestep;
                     }
                 }
+            }
+        }
+        void OriginateLaser(int startTime, int endTime)
+        {
+            var i = 0;
+
+            using (var pool = new SpritePools(GetLayer("")))
+            foreach (var hit in Beatmap.HitObjects) if (hit.StartTime >= startTime && hit.StartTime <= endTime)
+                for (var j = 0; j < 2; j++)
+            {
+                if (i > 3) i = 0;
+
+                var sprite = pool.Get(hit.StartTime, hit.EndTime + 1000, "sb/p.png", true);
+                var angle = .17 + i * PI / 2;
+                if (sprite.RotationAt(hit.StartTime) != angle) sprite.Rotate(hit.StartTime, angle);
+
+                sprite.Move(hit.StartTime, hit.Position + hit.StackOffset);
+                sprite.ScaleVec(OsbEasing.OutQuint, hit.StartTime, hit.EndTime + 1000, 2.5, 0, 1, 1400);
+
+                if ((Color4)sprite.ColorAt(hit.StartTime) != hit.Color) sprite.Color(hit.StartTime, hit.Color);
+                sprite.Fade(hit.StartTime, hit.EndTime + 1000, 1, 0);
+
+                i++;
             }
         }
         void BackHL(int startTime, int endTime)

@@ -8,11 +8,6 @@ Config:
     Value: "0"
     DisplayName: "Random seed"
 Layers:
-  b6ebe318c3ad4c6a8b205b2fad8fadd6:
-    Name: "beat"
-    OsbLayer: Background
-    DiffSpecific: No
-    Visible: Yes
   43da5f2baf254979a95509d142b4faff:
     Name: ""
     OsbLayer: Background
@@ -20,6 +15,11 @@ Layers:
     Visible: Yes
   1b811c64acf84b8d8668cb16f8eb9f35:
     Name: "RotLines"
+    OsbLayer: Background
+    DiffSpecific: No
+    Visible: Yes
+  b6ebe318c3ad4c6a8b205b2fad8fadd6:
+    Name: "beat"
     OsbLayer: Background
     DiffSpecific: No
     Visible: Yes
