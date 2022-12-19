@@ -43,7 +43,7 @@ namespace StorybrewScripts
                     (float)(320 + Cos(angle) * radius),
                     (float)(240 + Sin(angle) * radius));
 
-                var lines = GetLayer("RotLines").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(0, 0));
+                var lines = GetLayer("RotLines").CreateSprite("sb/px.png", OsbOrigin.Centre, new Vector2(0, 0));
 
                 lines.ScaleVec(startTime, 1.5, 20);
                 lines.Fade(endTime, endTime + 1000, 1, 0);
@@ -81,7 +81,7 @@ namespace StorybrewScripts
         {
             for (var i = 0; i < 70; i++)
             {
-                var sprite = GetLayer("").CreateSprite("sb/ringw.png");
+                var sprite = GetLayer("").CreateSprite("sb/rw.png");
 
                 var fade = Random(.5, 1);
                 var fadeTime = Random(200, 500);
@@ -120,7 +120,7 @@ namespace StorybrewScripts
                 var realStart = start + timeStep * (i / 2);
                 var fade = Random(.3, .6);
 
-                var square = GetLayer("beat").CreateSprite(circ ? "sb/c.png" : "sb/p.png", 
+                var square = GetLayer("beat").CreateSprite(circ ? "sb/cir.png" : "sb/px.png", 
                     OsbOrigin.Centre, new Vector2(Random(-107, 747), 0));
 
                 square.Fade(realStart, realStart + 150, 0, fade);
@@ -155,7 +155,7 @@ namespace StorybrewScripts
             var easing = OsbEasing.OutQuad;
             var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration;
 
-            var sprite = GetLayer("beat").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
+            var sprite = GetLayer("beat").CreateSprite("sb/px.png", OsbOrigin.Centre, new Vector2(320, 240));
             for (double i = startTime; i < endTime - 1; i += timeStep)
             {
                 sprite.Scale(easing, i, i + timeStep, 125, 85);
@@ -182,7 +182,7 @@ namespace StorybrewScripts
                 var startScale = Sqrt(scaleStart * scaleStart + scaleStart * scaleStart);
                 var endScale = Sqrt(scaleEnd * scaleEnd + scaleEnd * scaleEnd);
 
-                var border = GetLayer("beat").CreateSprite("sb/p.png", OsbOrigin.BottomCentre);
+                var border = GetLayer("beat").CreateSprite("sb/px.png", OsbOrigin.BottomCentre);
                 border.Rotate(startTime, angle - Pi / 4);
                 for (double s = startTime; s < endTime - 1; s += timeStep)
                 {

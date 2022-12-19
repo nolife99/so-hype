@@ -35,7 +35,7 @@ namespace StorybrewScripts
         }
         void DotBurst(int startTime, int endTime)
         {
-            using (var pool = new SpritePool(GetLayer(""), "sb/d.png", true)) foreach (var hit in Beatmap.HitObjects) 
+            using (var pool = new SpritePool(GetLayer(""), "sb/dot.png", true)) foreach (var hit in Beatmap.HitObjects) 
                 if (hit.StartTime >= startTime && hit.EndTime <= endTime) for (var i = 0; i < Random(20, 25); i++)
             {
                 var angle = Random(PI * 2);
@@ -106,7 +106,7 @@ namespace StorybrewScripts
             {
                 if (i > 3) i = 0;
 
-                var sprite = pool.Get(hit.StartTime, hit.EndTime + 1000, "sb/p.png", true);
+                var sprite = pool.Get(hit.StartTime, hit.EndTime + 1000, "sb/px.png", true);
                 var angle = .17 + i * PI / 2;
                 if (sprite.RotationAt(hit.StartTime) != angle) sprite.Rotate(hit.StartTime, angle);
 

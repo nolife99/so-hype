@@ -17,7 +17,7 @@ namespace StorybrewScripts
         }
         void MakeSpectrum(int startTime, int endTime)
         {
-            var bMap = GetMapsetBitmap("sb/l.png");
+            var bMap = GetMapsetBitmap("sb/pl.png");
             var BarCount = 18;
             var fftCount = BarCount * 2;
             var scale = new Vector2(10, 150);
@@ -47,7 +47,7 @@ namespace StorybrewScripts
                 var keyframe = keyframes[i];
                 keyframe.Simplify1dKeyframes(2, f => f);
 
-                var sprite = GetLayer("").CreateSprite("sb/l.png", OsbOrigin.Centre, new Vector2(basePos.X + i * width, basePos.Y));
+                var sprite = GetLayer("").CreateSprite("sb/pl.png", OsbOrigin.Centre, new Vector2(basePos.X + i * width, basePos.Y));
                 sprite.Fade(OsbEasing.Out, startTime, startTime + 500, 0, .5);
                 sprite.Fade(OsbEasing.In, endTime - 500, endTime, .5, 0);
                 sprite.Additive(startTime);
@@ -93,7 +93,7 @@ namespace StorybrewScripts
                 var keyframe = height[i];
                 keyframe.Simplify1dKeyframes(5, h => h);
 
-                var bar = GetLayer("").CreateSprite("sb/p.png", OsbOrigin.BottomCentre, new Vector2(
+                var bar = GetLayer("").CreateSprite("sb/px.png", OsbOrigin.BottomCentre, new Vector2(
                     (float)(Position.X + radius * Cos(i * 2 * PI / BarCount)), 
                     (float)(Position.Y + radius * Sin(i * 2 * PI / BarCount))));
                 

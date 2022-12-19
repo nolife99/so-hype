@@ -47,7 +47,7 @@ namespace StorybrewScripts
                             var position = new Vector2(letterX, 420) + texture.OffsetFor(OsbOrigin.Centre) * scale;
                             if (!hasBox)
                             {
-                                var box = pool.Get(startTime, endTime, "sb/p.png", OsbOrigin.Centre, new Vector2(320, position.Y),
+                                var box = pool.Get(startTime, endTime, "sb/px.png", OsbOrigin.Centre, new Vector2(320, position.Y),
                                     (p, s, e) => p.Color(s, 0, 0, 0));
 
                                 box.ScaleVec(OsbEasing.OutCirc, startTime, startTime + beat, 0, height + 5, width + 15, height + 5);

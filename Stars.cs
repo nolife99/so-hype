@@ -1,6 +1,6 @@
 using OpenTK;
 using StorybrewCommon.Scripting;
-using StorybrewCommon.Storyboarding3d; // Debug assembly
+using StorybrewCommon.Storyboarding3d;
 using StorybrewCommon.Animations;
 
 namespace StorybrewScripts
@@ -9,12 +9,9 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            var timer = System.Diagnostics.Stopwatch.StartNew();
             Scene1(3600, 25926);
             Scene2(92903, 104065);
             Scene3(190577, 229647);
-            timer.Stop();
-            Log($"Execution: {timer.ElapsedMilliseconds / 1000f} seconds");
         }
         void Scene1(int startTime, int endTime)
         {
@@ -41,7 +38,7 @@ namespace StorybrewScripts
 
                 var star = new Sprite3d
                 {
-                    SpritePath = "sb/d.png",
+                    SpritePath = "sb/dot.png",
                     UseDistanceFade = true,
                     RotationMode = RotationMode.Fixed
                 };
@@ -95,7 +92,7 @@ namespace StorybrewScripts
 
                 var star = new Sprite3d
                 {
-                    SpritePath = "sb/d.png",
+                    SpritePath = "sb/dot.png",
                     UseDistanceFade = true,
                     RotationMode = RotationMode.Fixed
                 };
@@ -148,7 +145,7 @@ namespace StorybrewScripts
 
                 var star = new Sprite3d
                 {
-                    SpritePath = "sb/d.png",
+                    SpritePath = "sb/dot.png",
                     UseDistanceFade = true,
                     RotationMode = RotationMode.Fixed
                 };

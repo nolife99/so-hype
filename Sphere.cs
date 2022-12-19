@@ -51,7 +51,7 @@ namespace StorybrewScripts
             var spinDur = beat * spinMult;
             var rotFunc = new Quaterniond(DegreesToRadians(42.5), 0, DegreesToRadians(25));
 
-            var back = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(317, 238));
+            var back = GetLayer("").CreateSprite("sb/dot.png", OsbOrigin.Centre, new Vector2(317, 238));
             back.Scale(OsbEasing.OutBack, start, start + beat * 4, 0, 4.5);
             back.Color(start, 0, 0, 0);
             back.Fade(OsbEasing.In, end, end + beat * 4, .9, 0);
@@ -67,7 +67,7 @@ namespace StorybrewScripts
                 var basePos = new Vector3d(rad * Cos(r / dots.X * TwoPi), size * Cos(c / dots.Y * Pi), rad * Sin(r / dots.X * TwoPi));
                 var pos = Vector3d.Transform(basePos, rotFunc);
 
-                var sprite = GetLayer("").CreateSprite("sb/d.png", OsbOrigin.Centre, new Vector2(0, (float)pos.Y + 240));
+                var sprite = GetLayer("").CreateSprite("sb/dot.png", OsbOrigin.Centre, new Vector2(0, (float)pos.Y + 240));
                 var delay = Abs(c - dots.Y / 2) * 100;
                 sprite.Fade(start + delay, start + delay + beat * 2, 0, 1);
                 sprite.Fade(end - delay, end - delay + beat * 4, 1, 0);

@@ -8,5 +8,3 @@ WIP storyboard for (ranked) hype (mapped by nines) using a custom build of story
 * [Spectrum.cs](http://github.com/nolife99/so-hype/blob/master/Spectrum.cs) - optimized audio visualizer (kiai part)
 * [Sphere.cs](http://github.com/nolife99/so-hype/blob/master/Sphere.cs) - optimized transformed sphere
 * [Stars.cs](http://github.com/nolife99/so-hype/blob/master/Stars.cs) - travel through stars (calm part)
-# Fully storyboarded sections
-* 00:03:600 - 03:49:647

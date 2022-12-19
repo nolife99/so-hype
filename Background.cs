@@ -8,7 +8,7 @@ namespace StorybrewScripts
     class Background : StoryboardObjectGenerator
     {
         int bitmapH, beat;
-        const string bg = "63888719_p0.jpg", blur = "sb/b/blur.png";
+        const string bg = "63888719_p0.jpg", blur = "sb/blur.png";
 
         protected override void Generate()
         {
@@ -106,7 +106,7 @@ namespace StorybrewScripts
         }
         void Flash(int startTime, int endTime, double fade = 1)
         {
-            var sprite = GetLayer("Flash").CreateSprite("sb/p.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var sprite = GetLayer("Flash").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             sprite.ScaleVec(startTime, 854, 480);
             sprite.Fade(startTime, endTime, fade, 0);
             sprite.Additive(startTime);
@@ -137,18 +137,18 @@ namespace StorybrewScripts
 
         void Section1()
         {
-            var back = GetLayer("BG").CreateSprite("sb/p.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var back = GetLayer("BG").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             back.ScaleVec(25926, 854, 480);
             back.ColorHsb(25926, 30, .5, .5);
             back.Fade(37089, 38484, .7, 0);
 
-            var back2 = GetLayer("BG").CreateSprite("sb/p.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var back2 = GetLayer("BG").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             back2.ColorHsb(37089, 190, .15, 1);
             back2.ScaleVec(37089, 854, 480);
             back2.Fade(37089, 38484, 0, .7);
             back2.Fade(46856, 48600, .7, 0);
 
-            var diamond = GetLayer("diam").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
+            var diamond = GetLayer("diam").CreateSprite("sb/px.png", OsbOrigin.Centre, new Vector2(320, 240));
             diamond.Scale(OsbEasing.OutQuint, 37089, 37786, 854, 130);
             diamond.Fade(37089, 37437, 0, 1);
             diamond.Rotate(OsbEasing.OutQuad, 37089, 37437, -Math.PI / 4, Math.PI / 4);
@@ -177,7 +177,7 @@ namespace StorybrewScripts
         }
         void Section2()
         {
-            var back = GetLayer("BG").CreateSprite("sb/p.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var back = GetLayer("BG").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             back.ColorHsb(71972, 190, .15, 1);
             back.ScaleVec(71972, 854, 480);
             back.Fade(71972, 73368, 0, .7);
@@ -247,7 +247,7 @@ namespace StorybrewScripts
             snare.Fade(0, beat * 2, .8, 0);
             snare.EndGroup();
 
-            var diamond = GetLayer("???").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
+            var diamond = GetLayer("???").CreateSprite("sb/px.png", OsbOrigin.Centre, new Vector2(320, 240));
             diamond.Scale(OsbEasing.OutCubic, 156740, 157263, 0, 150);
             diamond.Rotate(OsbEasing.OutBack, 156740, 157263, 0, Math.PI / 4 * 5);
             diamond.Scale(OsbEasing.InQuad, 157263, 157437, 150, 944);
@@ -265,12 +265,12 @@ namespace StorybrewScripts
         }
         void AfterCalm1()
         {
-            var back = GetLayer("BG").CreateSprite("sb/p.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var back = GetLayer("BG").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             back.ScaleVec(229647, 854, 480);
             back.ColorHsb(229647, 190, .15, 1);
             back.Fade(240809, 240984, .7, 0);
 
-            var diamond = GetLayer("???").CreateSprite("sb/p.png", OsbOrigin.Centre, new Vector2(320, 240));
+            var diamond = GetLayer("???").CreateSprite("sb/px.png", OsbOrigin.Centre, new Vector2(320, 240));
             diamond.Scale(OsbEasing.InQuint, 249182, 251972, 100, 854);
             diamond.Rotate(OsbEasing.In, 249182, 251972, Math.PI / 4, Math.PI / 4 * 10);
         }
