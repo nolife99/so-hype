@@ -50,8 +50,8 @@ namespace StorybrewScripts
                                 var box = pool.Get(startTime, endTime, "sb/px.png", OsbOrigin.Centre, new Vector2(320, position.Y),
                                     (p, s, e) => p.Color(s, 0, 0, 0));
 
-                                box.ScaleVec(OsbEasing.OutCirc, startTime, startTime + beat, 0, height + 5, width + 15, height + 5);
-                                box.ScaleVec(OsbEasing.InExpo, endTime - beat, endTime, width + 15, height + 5, 0, height + 5);
+                                box.ScaleVec(OsbEasing.OutQuart, startTime, startTime + beat, 0, height + 5, width + 15, height + 5);
+                                box.ScaleVec(OsbEasing.InQuint, endTime - beat, endTime, width + 15, height + 5, 0, height + 5);
 
                                 hasBox = true;
                             }
@@ -59,7 +59,7 @@ namespace StorybrewScripts
                             var sprite = pool.Get(startTime, endTime, texture.Path, OsbOrigin.Centre, new Vector2(0, position.Y),
                                 (p, s, e) => p.Scale(s, scale));
 
-                            sprite.MoveX(OsbEasing.OutCirc, startTime, startTime + beat, 320, position.X);
+                            sprite.MoveX(OsbEasing.OutQuart, startTime, startTime + beat, 320, position.X);
                             sprite.MoveX(OsbEasing.InQuint, endTime - beat / 2, endTime, position.X, 320);
                             sprite.Fade(startTime, startTime + beat, 0, 1);
                             sprite.Fade(endTime - beat / 2, endTime, 1, 0);

@@ -75,20 +75,20 @@ namespace StorybrewScripts
 
                     while (true)
                     {
-                        var stepSprite = pool.Get(sTime, sTime + 1500);
+                        var stepSprite = pool.Get(sTime, hit.EndTime + 1500);
 
                         var slidePos = hit.PositionAtTime(sTime);
                         if (collect)
                         {   
-                            stepSprite.Move(OsbEasing.InExpo, sTime, sTime + 1500, slidePos, new Vector2(320, 240));
-                            stepSprite.Color(OsbEasing.InQuart, sTime, sTime + 1500, hit.Color, Color4.White);
+                            stepSprite.Move(OsbEasing.InExpo, sTime, hit.EndTime + 1500, slidePos, new Vector2(320, 240));
+                            stepSprite.Color(OsbEasing.InQuart, sTime, hit.EndTime + 1500, hit.Color, Color4.White);
                         }
                         else 
                         {
                             stepSprite.Move(sTime, slidePos);
                             if ((Color4)stepSprite.ColorAt(sTime) != hit.Color) stepSprite.Color(sTime, hit.Color);
                         }
-                        stepSprite.Fade(OsbEasing.InQuad, sTime, sTime + 1500, 0.35, 0);
+                        stepSprite.Fade(OsbEasing.InQuad, sTime, hit.EndTime + 1500, 0.35, 0);
 
                         if (sTime > hit.EndTime) break;
                         sTime += timestep;

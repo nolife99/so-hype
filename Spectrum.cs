@@ -2,6 +2,7 @@ using OpenTK;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Animations;
+using System.IO;
 using static System.Math;
 
 namespace StorybrewScripts
@@ -10,6 +11,7 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
+            CaptureVocals();
             MakeSpectrum(48949, 70577);
             MakeRadial(126740, 145926);
             MakeSpectrum(151507, 173833);
@@ -24,14 +26,12 @@ namespace StorybrewScripts
             var basePos = new Vector2(-50, 470);
 
             var keyframes = new KeyframedValue<float>[fftCount];
-            for (var i = 0; i < fftCount; i++) keyframes[i] = new KeyframedValue<float>(null);
+            for (var i = 0; i < fftCount; i++) keyframes[i] = new KeyframedValue<float>();
 
             var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 8;
-            var fftOffset = timeStep * .2;
-
-            for (var time = (double)startTime; time < endTime; time += timeStep)
+            for (double time = startTime; time < endTime; time += timeStep)
             {
-                var fft = GetFft(time + fftOffset, fftCount, null, OsbEasing.InExpo);
+                var fft = GetFft(time, fftCount, null, OsbEasing.InExpo);
                 for (var i = 0; i < fftCount; i++)
                 {
                     var height = Pow(Log10(1 + fft[i] * 470), 1.5) * scale.Y / bMap.Height;
@@ -72,13 +72,12 @@ namespace StorybrewScripts
             var radius = 125;
 
             var height = new KeyframedValue<float>[fftCount];
-            for (var i = 0; i < fftCount; i++) height[i] = new KeyframedValue<float>(null);
+            for (var i = 0; i < fftCount; i++) height[i] = new KeyframedValue<float>();
             
             var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 6;
-            var offset = timeStep * .2;
             for (double t = startTime; t <= endTime + 10; t += timeStep)
             {
-                var fft = GetFft(t + offset, fftCount, null, OsbEasing.InExpo);
+                var fft = GetFft(t, fftCount, null, OsbEasing.InExpo);
                 for (var i = 0; i < fftCount; i++)
                 {
                     var val = Log10(1 + fft[i] * 5) * scale.Y;
@@ -103,6 +102,18 @@ namespace StorybrewScripts
                 bar.Fade(endTime, endTime + 200, .75, 0);
 
                 keyframe.ForEachPair((s, e) => bar.ScaleVec(s.Time, e.Time, scale.X, s.Value, scale.X, e.Value), 1, s => (int)s);
+            }
+        }
+        void CaptureVocals()
+        {
+            using (var pool = new SpritePool(GetLayer("ControlledSpec"), "sb/px.png", new Vector2(320, 240), true))
+            foreach (var hit in GetBeatmap("hitsound sb").HitObjects)
+            {
+                var sprite = pool.Get(hit.StartTime, hit.StartTime + 600);
+                sprite.ScaleVec(OsbEasing.OutBack, hit.StartTime, hit.StartTime + 600, 0, 50, 860, 50);
+                sprite.Rotate(OsbEasing.OutBack, hit.StartTime, hit.StartTime + 600, 0, Random(-PI / 30, PI / 30));
+                sprite.Fade(OsbEasing.In, hit.StartTime, hit.StartTime + 600, .3, 0);
+                sprite.Additive(hit.StartTime);
             }
         }
     }

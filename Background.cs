@@ -149,7 +149,7 @@ namespace StorybrewScripts
             back2.Fade(46856, 48600, .7, 0);
 
             var diamond = GetLayer("diam").CreateSprite("sb/px.png", OsbOrigin.Centre, new Vector2(320, 240));
-            diamond.Scale(OsbEasing.OutQuint, 37089, 37786, 854, 130);
+            diamond.Scale(OsbEasing.OutExpo, 37089, 37786, 854, 130);
             diamond.Fade(37089, 37437, 0, 1);
             diamond.Rotate(OsbEasing.OutQuad, 37089, 37437, -Math.PI / 4, Math.PI / 4);
             diamond.Rotate(OsbEasing.InOutSine, 37437, 47554, Math.PI / 4, Math.PI * 20);
@@ -271,7 +271,7 @@ namespace StorybrewScripts
             back.Fade(240809, 240984, .7, 0);
 
             var diamond = GetLayer("???").CreateSprite("sb/px.png", OsbOrigin.Centre, new Vector2(320, 240));
-            diamond.Scale(OsbEasing.InQuint, 249182, 251972, 100, 854);
+            diamond.Scale(OsbEasing.InExpo, 249182, 251972, 50, 854);
             diamond.Rotate(OsbEasing.In, 249182, 251972, Math.PI / 4, Math.PI / 4 * 10);
         }
         void LastKiai()
