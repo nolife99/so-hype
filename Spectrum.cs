@@ -2,7 +2,6 @@ using OpenTK;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Animations;
-using System.IO;
 using static System.Math;
 
 namespace StorybrewScripts
@@ -20,9 +19,9 @@ namespace StorybrewScripts
         void MakeSpectrum(int startTime, int endTime)
         {
             var bMap = GetMapsetBitmap("sb/pl.png");
-            var BarCount = 18;
+            var BarCount = 20;
             var fftCount = BarCount * 2;
-            var scale = new Vector2(10, 150);
+            var scale = new Vector2(15, 150);
             var basePos = new Vector2(-50, 470);
 
             var keyframes = new KeyframedValue<float>[fftCount];
@@ -34,25 +33,25 @@ namespace StorybrewScripts
                 var fft = GetFft(time, fftCount, null, OsbEasing.InExpo);
                 for (var i = 0; i < fftCount; i++)
                 {
-                    var height = Pow(Log10(1 + fft[i] * 470), 1.5) * scale.Y / bMap.Height;
+                    var height = Pow(Log10(1 + fft[i] * 470), 1.6) * scale.Y / bMap.Height;
                     if (height < 1) height = 1;
 
                     keyframes[i].Add(time, (float)height);
                 }
             }
 
-            var width = 800 / BarCount;
+            var width = 780 / BarCount;
             for (var i = 0; i < BarCount; i++)
             {
                 var keyframe = keyframes[i];
-                keyframe.Simplify1dKeyframes(2, f => f);
+                keyframe.Simplify1dKeyframes(1.5, f => f);
 
                 var sprite = GetLayer("").CreateSprite("sb/pl.png", OsbOrigin.Centre, new Vector2(basePos.X + i * width, basePos.Y));
-                sprite.Fade(OsbEasing.Out, startTime, startTime + 500, 0, .5);
-                sprite.Fade(OsbEasing.In, endTime - 500, endTime, .5, 0);
+                sprite.Fade(startTime, startTime + 500, 0, .5);
+                sprite.Fade(endTime - 500, endTime, .5, 0);
                 sprite.Additive(startTime);
 
-                var scaleX = scale.X * width / bMap.Width; scaleX = (float)Floor(scaleX * 10) / 10f;
+                var scaleX = (double)scale.X * width / bMap.Width; scaleX = Floor(scaleX * 10) / 10f;
 
                 var hasScale = false;
                 keyframe.ForEachPair((start, end) =>
@@ -106,13 +105,18 @@ namespace StorybrewScripts
         }
         void CaptureVocals()
         {
-            using (var pool = new SpritePool(GetLayer("ControlledSpec"), "sb/px.png", new Vector2(320, 240), true))
+            using (var pool = new SpritePool(GetLayer("ControlledSpec"), "sb/px.png", new Vector2(320, 240), (p, s, e) =>
+            {
+                p.Additive(s);
+                p.Color(s, 1, 0, 0);
+            }))
             foreach (var hit in GetBeatmap("hitsound sb").HitObjects)
             {
-                var sprite = pool.Get(hit.StartTime, hit.StartTime + 600);
-                sprite.ScaleVec(OsbEasing.OutBack, hit.StartTime, hit.StartTime + 600, 0, 50, 860, 50);
-                sprite.Rotate(OsbEasing.OutBack, hit.StartTime, hit.StartTime + 600, 0, Random(-PI / 30, PI / 30));
-                sprite.Fade(OsbEasing.In, hit.StartTime, hit.StartTime + 600, .3, 0);
+                var beat = Beatmap.GetTimingPointAt(10000).BeatDuration;
+                var sprite = pool.Get(hit.StartTime, hit.EndTime + beat * 4);
+                sprite.ScaleVec(OsbEasing.OutQuint, hit.StartTime, hit.EndTime + beat * 2, 0, 50, 854, 50);
+                sprite.Rotate(OsbEasing.OutQuint, hit.StartTime, hit.EndTime + beat * 3, 0, Random(-PI / 30, PI / 30));
+                sprite.Fade(OsbEasing.Out, hit.StartTime, hit.EndTime + beat * 4, .3, 0);
             }
         }
     }
