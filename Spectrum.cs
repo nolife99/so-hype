@@ -113,7 +113,6 @@ namespace StorybrewScripts
                 sprite.ScaleVec(OsbEasing.OutBack, hit.StartTime, hit.StartTime + 600, 0, 50, 860, 50);
                 sprite.Rotate(OsbEasing.OutBack, hit.StartTime, hit.StartTime + 600, 0, Random(-PI / 30, PI / 30));
                 sprite.Fade(OsbEasing.In, hit.StartTime, hit.StartTime + 600, .3, 0);
-                sprite.Additive(hit.StartTime);
             }
         }
     }
