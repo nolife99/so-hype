@@ -104,7 +104,7 @@ namespace StorybrewScripts
             foreach (var hit in Beatmap.HitObjects) if (hit.StartTime >= startTime && hit.StartTime <= endTime)
                 for (var j = 0; j < 2; j++)
             {
-                if (i > 3) i = 0;
+                if (i > 1) i = 0;
 
                 var sprite = pool.Get(hit.StartTime, hit.EndTime + 1000, "sb/px.png", true);
                 var angle = .17 + i * PI / 2;
