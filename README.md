@@ -1,5 +1,7 @@
 # PSYQUI - Hype feat. Such
-WIP storyboard for (ranked) hype (mapped by nines) using a custom build of storybrew
+**COMPLETED** 
+
+FULL storyboard for (ranked) hype (mapped by nines) using a custom build of storybrew
 # Scripts list
 * [Background.cs](http://github.com/nolife99/so-hype/blob/master/Background.cs) - background manager
 * [HitObjects.cs](http://github.com/nolife99/so-hype/blob/master/HitObjects.cs) - gameplay enhancement
