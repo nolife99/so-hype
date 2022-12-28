@@ -31,7 +31,7 @@ namespace StorybrewScripts
         {
             var startTime = 73368;
             var endTime = 92903;
-            var amount = 20;
+            var amount = 21;
             double angle = 90;
             double radius = 150;
 
@@ -50,10 +50,10 @@ namespace StorybrewScripts
 
                 var keyframe = new KeyframedValue<Vector2>();
 
-                var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 4;
+                var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 8;
                 for (double time = startTime; time < endTime + timeStep; time += timeStep)
                 {
-                    angle -= 0.06;
+                    angle -= 0.04;
 
                     var nPosition = new Vector2(
                         (float)(320 + Cos(angle) * radius),

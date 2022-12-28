@@ -10,7 +10,8 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            CaptureVocals();
+            // If you don't have the beatmap use ImportOsb 
+            // CaptureVocals();
             MakeSpectrum(48949, 70577);
             MakeRadial(126740, 145926);
             MakeSpectrum(151507, 173833);
