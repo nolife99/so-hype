@@ -58,7 +58,7 @@ namespace StorybrewScripts
                 {
                     hasScale = true;
                     sprite.ScaleVec(start.Time, end.Time, scaleX, start.Value, scaleX, end.Value);
-                }, 1, s => (int)s);
+                }, 1);
                 if (!hasScale) sprite.ScaleVec(startTime, scaleX, 1);
             }
         }
@@ -100,7 +100,7 @@ namespace StorybrewScripts
                 bar.Fade(startTime, .75);
                 bar.Fade(endTime, endTime + 200, .75, 0);
 
-                keyframe.ForEachPair((s, e) => bar.ScaleVec(s.Time, e.Time, scale.X, s.Value, scale.X, e.Value), 1, s => (int)s);
+                keyframe.ForEachPair((s, e) => bar.ScaleVec(s.Time, e.Time, scale.X, s.Value, scale.X, e.Value), 1);
             }
         }
         void CaptureVocals()

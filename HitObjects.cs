@@ -39,7 +39,7 @@ namespace StorybrewScripts
                 if (hit.StartTime >= startTime && hit.EndTime <= endTime) for (var i = 0; i < Random(20, 25); i++)
             {
                 var angle = Random(PI * 2);
-                var radius = Random(50f, 100);
+                var radius = Random(50f, 120);
 
                 var startPos = hit.Position + hit.StackOffset;
                 var endPos = new Vector2((int)(radius * Cos(angle) + startPos.X), (int)(radius * Sin(angle) + startPos.Y));

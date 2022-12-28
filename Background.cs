@@ -8,12 +8,14 @@ namespace StorybrewScripts
     class Background : StoryboardObjectGenerator
     {
         int bitmapH, beat;
+        double beatD;
         const string bg = "63888719_p0.jpg", blur = "sb/blur.png";
 
         protected override void Generate()
         {
             bitmapH = GetMapsetBitmap(blur).Height;
-            beat = (int)Beatmap.GetTimingPointAt(48949).BeatDuration;
+            beatD = Beatmap.GetTimingPointAt(48949).BeatDuration;
+            beat = (int)beatD;
 
             ScreenFillHighlight(25228, 25926, 25926, 26275);
             ScreenFillHighlight(102670, 103891, 104065, 104414);
@@ -56,7 +58,7 @@ namespace StorybrewScripts
             Flash(73368, 74763, .6);
             Flash(81740, 83135, .6);
             Flash(92903, 94298, .6);
-            Flash(109647, 110344, .6);
+            Flash(109647, 110344, .3);
             Flash(115577, 116623, .5);
             Flash(126740, 129182);
             Flash(137554, 138949, .8);
@@ -113,14 +115,14 @@ namespace StorybrewScripts
         }
         void BlurBG(int startFade, int startTime, int endTime, int endFade)
         {
-            var sprite = GetLayer("BG").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
+            var sprite = GetLayer("").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
             sprite.Scale(startFade, 480f / GetMapsetBitmap(blur).Height);
             if (startTime != startFade) sprite.Fade(OsbEasing.Out, startFade, startTime, 0, 1);
             sprite.Fade(OsbEasing.In, endTime, endFade, 1, 0);
         }
         void MainBG(int startFade, int startTime, int endTime, int endFade)
         {
-            var sprite = GetLayer("BG").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
+            var sprite = GetLayer("").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
             sprite.Scale(startFade, 480f / GetMapsetBitmap(bg).Height);
             if (startTime != startFade) sprite.Fade(OsbEasing.Out, startFade, startTime, 0, 1);
             sprite.Fade(OsbEasing.In, endTime, endFade, 1, 0);
@@ -137,12 +139,12 @@ namespace StorybrewScripts
 
         void Section1()
         {
-            var back = GetLayer("BG").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var back = GetLayer("").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             back.ScaleVec(25926, 854, 480);
             back.ColorHsb(25926, 30, .5, .5);
             back.Fade(37089, 38484, .7, 0);
 
-            var back2 = GetLayer("BG").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var back2 = GetLayer("").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             back2.ColorHsb(37089, 190, .15, 1);
             back2.ScaleVec(37089, 854, 480);
             back2.Fade(37089, 38484, 0, .7);
@@ -158,32 +160,30 @@ namespace StorybrewScripts
         }
         void Kiai1()
         {
-            var snare = GetLayer("BG").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
-            snare.StartLoopGroup(48949, (64996 - 48949) / (beat * 2));
-            snare.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat * 2, .8, 0);
-            snare.EndGroup();
+            var snare = GetLayer("").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
+            for (double i = 48949; i < 64298; i += beatD * 2)
+            {
+                snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                snare.Fade(i, i + beatD * 2, .8, 0);
+            }
 
-            var clap = GetLayer("BG").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
-            clap.StartLoopGroup(49298, (57234 - 49298) / (beat * 2));
-            clap.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat * 2, .9, 0);
-            clap.EndGroup();
-
-            clap.StartLoopGroup(59763, (65344 - 59763) / (beat * 2));
-            clap.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat * 2, .9, 0);
-            clap.EndGroup();
+            var clap = GetLayer("").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
+            for (double i = 49298; i < 64647; i += beatD * 2)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD * 2, .8, 0);
+            }
         }
         void Section2()
         {
-            var back = GetLayer("BG").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var back = GetLayer("").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             back.ColorHsb(71972, 190, .15, 1);
             back.ScaleVec(71972, 854, 480);
             back.Fade(71972, 73368, 0, .7);
-            back.StartLoopGroup(73716, (93251 - 73716) / (beat * 2));
-            back.Fade(OsbEasing.In, 0, beat * 2, .9, .7);
-            back.EndGroup();
+            
+            for (double i = 73716; i < 92554; i += beatD * 2)
+                back.Fade(OsbEasing.In, i, i + beatD * 2, .9, .7);
+
             back.Fade(93251, 94298, .7, 0);
             back.Fade(104065, .7);
             back.ColorHsb(113833, 115577, 190, .15, 1, 20, .15, 1);
@@ -191,61 +191,77 @@ namespace StorybrewScripts
         }
         void Kiai2()
         {
-            var clap = GetLayer("BG").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
-            clap.StartLoopGroup(126740, (146275 - 126740) / (beat * 2));
-            clap.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat * 2, .9, 0);
-            clap.EndGroup();
+            var clap = GetLayer("").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
+            for (double i = 126740; i < 145926; i += beatD * 2)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD * 2, .8, 0);
+            }
 
-            var snare = GetLayer("BG").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
-            snare.StartLoopGroup(127089, (145926 - 127089) / (beat * 2));
-            snare.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat * 2, .8, 0);
-            snare.EndGroup();
+            var snare = GetLayer("").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
+            for (double i = 127089; i < 145926; i += beatD * 2)
+            {
+                snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                snare.Fade(i, i + beatD * 2, .8, 0);
+            }
         }
         void Kiai3()
         {
-            var clap = GetLayer("BG").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
-            clap.StartLoopGroup(149065, (151158 - 149065) / (int)(beat * 1.5));
-            clap.Scale(OsbEasing.OutQuad, 0, beat * 1.5, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat * 1.5, .9, 0);
-            clap.EndGroup();
+            var clap = GetLayer("").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
+            for (double i = 149065; i < 151071; i += beatD * 1.5)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD * 1.5, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD * 1.5, .8, 0);
+            }
 
-            clap.StartLoopGroup(151856, (162321 - 151856) / (beat * 2));
-            clap.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat * 2, .9, 0);
-            clap.EndGroup();
+            for (double i = 151856; i < 156827; i += beatD * 2)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD * 2, .8, 0);
+            }
 
-            clap.StartLoopGroup(163019, (172786 - 163019) / (beat * 2));
-            clap.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat * 2, .9, 0);
-            clap.EndGroup();
+            for (double i = 157437; i < 161711; i += beatD * 2)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD * 2, .8, 0);
+            }
 
-            clap.StartLoopGroup(173833, (182205 - 173833) / beat);
-            clap.Scale(OsbEasing.OutQuad, 0, beat, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat, .9, 0);
-            clap.EndGroup();
+            for (double i = 163019; i < 172176; i += beatD * 2)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD * 2, .8, 0);
+            }
 
-            clap.StartLoopGroup(182205, (183600 - 182205) / (beat / 2));
-            clap.Scale(OsbEasing.OutQuad, 0, beat / 2, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat / 2, .9, 0);
-            clap.EndGroup();
+            for (double i = 173833; i < 182118; i += beatD)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD, .8, 0);
+            }
 
-            var snare = GetLayer("BG").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
-            snare.StartLoopGroup(151507, (157089 - 151507) / (beat * 2));
-            snare.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat * 2, .8, 0);
-            snare.EndGroup();
+            for (double i = 182205; i < 183513; i += beatD / 2)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD / 2, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD / 2, .8, 0);
+            }
 
-            snare.StartLoopGroup(157786, (161972 - 157786) / (beat * 2));
-            snare.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat * 2, .8, 0);
-            snare.EndGroup();
+            var snare = GetLayer("").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
+            for (double i = 151507; i < 156478; i += beatD * 2)
+            {
+                snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                snare.Fade(i, i + beatD * 2, .8, 0);
+            }
 
-            snare.StartLoopGroup(162670, (172437 - 162670) / (beat * 2));
-            snare.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat * 2, .8, 0);
-            snare.EndGroup();
+            for (double i = 157786; i < 161362; i += beatD * 2)
+            {
+                snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                snare.Fade(i, i + beatD * 2, .8, 0);
+            }
+
+            for (double i = 162670; i < 171827; i += beatD * 2)
+            {
+                snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                snare.Fade(i, i + beatD * 2, .8, 0);
+            }
 
             var diamond = GetLayer("???").CreateSprite("sb/px.png", OsbOrigin.Centre, new Vector2(320, 240));
             diamond.Scale(OsbEasing.OutCubic, 156740, 157263, 0, 150);
@@ -265,7 +281,7 @@ namespace StorybrewScripts
         }
         void AfterCalm1()
         {
-            var back = GetLayer("BG").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+            var back = GetLayer("").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             back.ScaleVec(229647, 854, 480);
             back.ColorHsb(229647, 190, .15, 1);
             back.Fade(240809, 240984, .7, 0);
@@ -276,27 +292,31 @@ namespace StorybrewScripts
         }
         void LastKiai()
         {
-            var snare = GetLayer("BG").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
-            snare.StartLoopGroup(258251, (266013 - 258251) / (beat * 2));
-            snare.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat * 2, .8, 0);
-            snare.EndGroup();
+            var clap = GetLayer("").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
+            for (double i = 269065; i < 274036; i += beatD * 2)
+            {
+                clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                clap.Fade(i, i + beatD * 2, .8, 0);
+            }
 
-            snare.StartLoopGroup(266275, (268716 - 266275) / (int)(beat * 1.5));
-            snare.Scale(OsbEasing.OutQuad, 0, beat * 1.5, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat * 1.5, .8, 0);
-            snare.EndGroup();
+            var snare = GetLayer("").CreateSprite(blur, OsbOrigin.Centre, new Vector2(320, 240));
+            for (double i = 258251; i < 265664; i += beatD * 2)
+            {
+                snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                snare.Fade(i, i + beatD * 2, .8, 0);
+            }
 
-            snare.StartLoopGroup(268716, (274298 - 268716) / (beat * 2));
-            snare.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            snare.Fade(0, beat * 2, .8, 0);
-            snare.EndGroup();
+            for (double i = 266275; i < 268106; i += beatD * 1.5)
+            {
+                snare.Scale(OsbEasing.OutQuad, i, i + beatD * 1.5, 475f / bitmapH, 480f / bitmapH);
+                snare.Fade(i, i + beatD * 1.5, .8, 0);
+            }
 
-            var clap = GetLayer("BG").CreateSprite(bg, OsbOrigin.Centre, new Vector2(320, 240));
-            clap.StartLoopGroup(269065, (274647 - 269065) / (beat * 2));
-            clap.Scale(OsbEasing.OutQuad, 0, beat * 2, 475f / bitmapH, 480f / bitmapH);
-            clap.Fade(0, beat * 2, .9, 0);
-            clap.EndGroup();
+            for (double i = 268716; i < 273687; i += beatD * 2)
+            {
+                snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
+                snare.Fade(i, i + beatD * 2, .8, 0);
+            }
         }
 
         #endregion
