@@ -16,8 +16,7 @@ namespace StorybrewScripts
 
         protected override void Generate()
         {
-            using (var file = OpenProjectFile(Path))
-            using (var reader = new StreamReader(file, new UTF8Encoding()))
+            using (var file = OpenProjectFile(Path)) using (var reader = new StreamReader(file, new UTF8Encoding()))
             reader.ParseSections(section =>
             {
                 switch (section)
@@ -27,18 +26,16 @@ namespace StorybrewScripts
                 }
             });
         }
-        void parseVariables(StreamReader reader)
+        void parseVariables(StreamReader reader) => reader.ParseSectionLines(line =>
         {
-            reader.ParseSectionLines(line =>
-            {
-                var value = line.Split('=');
-                if (value.Length == 2) variables.Add(value[0], value[1]);
-            });
-        }
+            var v = line.Split('=');
+            if (v.Length == 2) variables.Add(v[0], v[1]);
+        });
         void parseEvents(StreamReader reader)
         {
             OsbSprite sprite = null;
-            var inCommandGroup = false;
+            var loopable = false;
+
             reader.ParseSectionLines(line =>
             {
                 if (line.StartsWith("//")) return;
@@ -47,165 +44,154 @@ namespace StorybrewScripts
                 while (line.Substring(depth).StartsWith(" ")) ++depth;
 
                 var trim = applyVariables(line.Trim());
-                var value = trim.Split(',');
+                var v = trim.Split(',');
 
-                if (inCommandGroup && depth < 2)
+                if (loopable && depth < 2)
                 {
                     sprite.EndGroup();
-                    inCommandGroup = false;
+                    loopable = false;
                 }
-                switch (value[0])
+                switch (v[0])
                 {
                     case "Sprite":
                     {
-                        var layerName = value[1];
-                        var origin = (OsbOrigin)Enum.Parse(typeof(OsbOrigin), value[2]);
-                        var path = removePathQuotes(value[3]);
-                        var x = float.Parse(value[4]);
-                        var y = float.Parse(value[5]);
-                        sprite = GetLayer(layerName).CreateSprite(path, origin, new Vector2(x, y));
+                        var origin = (OsbOrigin)Enum.Parse(typeof(OsbOrigin), v[2]);
+                        var path = removeQuotes(v[3]);
+                        var x = float.Parse(v[4]);
+                        var y = float.Parse(v[5]);
+                        sprite = GetLayer(v[1]).CreateSprite(path, origin, new Vector2(x, y));
+                        break;
                     }
-                    break;
                     case "Animation":
                     {
-                        var layerName = value[1];
-                        var origin = (OsbOrigin)Enum.Parse(typeof(OsbOrigin), value[2]);
-                        var path = removePathQuotes(value[3]);
-                        var x = float.Parse(value[4]);
-                        var y = float.Parse(value[5]);
-                        var frameCount = int.Parse(value[6]);
-                        var frameDelay = double.Parse(value[7]);
-                        var loopType = (OsbLoopType)Enum.Parse(typeof(OsbLoopType), value[8]);
-                        sprite = GetLayer(layerName).CreateAnimation(path, frameCount, frameDelay, loopType, origin, new Vector2(x, y));
+                        var origin = (OsbOrigin)Enum.Parse(typeof(OsbOrigin), v[2]);
+                        var path = removeQuotes(v[3]);
+                        var x = float.Parse(v[4]);
+                        var y = float.Parse(v[5]);
+                        var frameCount = int.Parse(v[6]);
+                        var frameDelay = double.Parse(v[7]);
+                        var loopType = (OsbLoopType)Enum.Parse(typeof(OsbLoopType), v[8]);
+                        sprite = GetLayer(v[1]).CreateAnimation(path, frameCount, frameDelay, loopType, origin, new Vector2(x, y));
+                        break;
                     }
-                    break;
                     case "Sample":
                     {
-                        var time = int.Parse(value[1]);
-                        var layerName = value[2];
-                        var path = removePathQuotes(value[3]);
-                        var volume = float.Parse(value[4]);
-                        GetLayer(layerName).CreateSample(path, time, volume);
+                        GetLayer(v[2]).CreateSample(removeQuotes(v[3]), int.Parse(v[1]), float.Parse(v[4]));
+                        break;
                     }
-                    break;
                     case "T":
                     {
-                        var triggerName = value[1];
-                        var startTime = int.Parse(value[2]);
-                        var endTime = int.Parse(value[3]);
-                        var groupNumber = value.Length > 4 ? int.Parse(value[4]) : 0;
-                        sprite.StartTriggerGroup(triggerName, startTime, endTime, groupNumber);
-                        inCommandGroup = true;
+                        sprite.StartTriggerGroup(v[1], int.Parse(v[2]), int.Parse(v[3]), v.Length > 4 ? int.Parse(v[4]) : 0);
+                        loopable = true;
+                        break;
                     }
-                    break;
                     case "L":
                     {
-                        var startTime = int.Parse(value[1]);
-                        var loopCount = int.Parse(value[2]);
-                        sprite.StartLoopGroup(startTime, loopCount);
-                        inCommandGroup = true;
+                        sprite.StartLoopGroup(int.Parse(v[1]), int.Parse(v[2]));
+                        loopable = true;
+                        break;
                     }
-                    break;
                     default:
                     {
-                        if (string.IsNullOrEmpty(value[3])) value[3] = value[2];
+                        if (string.IsNullOrEmpty(v[3])) v[3] = v[2];
 
-                        var command = value[0];
-                        var easing = (OsbEasing)int.Parse(value[1]);
-                        var startTime = int.Parse(value[2]);
-                        var endTime = int.Parse(value[3]);
+                        var command = v[0];
+                        var easing = (OsbEasing)int.Parse(v[1]);
+                        var startTime = int.Parse(v[2]);
+                        var endTime = int.Parse(v[3]);
 
                         switch (command)
                         {
                             case "F":
                             {
-                                var startValue = double.Parse(value[4]);
-                                var endValue = value.Length > 5 ? double.Parse(value[5]) : startValue;
+                                var startValue = double.Parse(v[4]);
+                                var endValue = v.Length > 5 ? double.Parse(v[5]) : startValue;
                                 sprite.Fade(easing, startTime, endTime, startValue, endValue);
+                                break;
                             }
-                            break;
                             case "S":
                             {
-                                var startValue = double.Parse(value[4]);
-                                var endValue = value.Length > 5 ? double.Parse(value[5]) : startValue;
+                                var startValue = double.Parse(v[4]);
+                                var endValue = v.Length > 5 ? double.Parse(v[5]) : startValue;
                                 sprite.Scale(easing, startTime, endTime, startValue, endValue);
+                                break;
                             }
-                            break;
                             case "V":
                             {
-                                var startX = double.Parse(value[4]);
-                                var startY = double.Parse(value[5]);
-                                var endX = value.Length > 6 ? double.Parse(value[6]) : startX;
-                                var endY = value.Length > 7 ? double.Parse(value[7]) : startY;
+                                var startX = double.Parse(v[4]);
+                                var startY = double.Parse(v[5]);
+                                var endX = v.Length > 6 ? double.Parse(v[6]) : startX;
+                                var endY = v.Length > 7 ? double.Parse(v[7]) : startY;
                                 sprite.ScaleVec(easing, startTime, endTime, startX, startY, endX, endY);
+                                break;
                             }
-                            break;
                             case "R":
                             {
-                                var startValue = double.Parse(value[4]);
-                                var endValue = value.Length > 5 ? double.Parse(value[5]) : startValue;
+                                var startValue = double.Parse(v[4]);
+                                var endValue = v.Length > 5 ? double.Parse(v[5]) : startValue;
                                 sprite.Rotate(easing, startTime, endTime, startValue, endValue);
+                                break;
                             }
-                            break;
                             case "M":
                             {
-                                var startX = double.Parse(value[4]);
-                                var startY = double.Parse(value[5]);
-                                var endX = value.Length > 6 ? double.Parse(value[6]) : startX;
-                                var endY = value.Length > 7 ? double.Parse(value[7]) : startY;
+                                var startX = double.Parse(v[4]);
+                                var startY = double.Parse(v[5]);
+                                var endX = v.Length > 6 ? double.Parse(v[6]) : startX;
+                                var endY = v.Length > 7 ? double.Parse(v[7]) : startY;
                                 sprite.Move(easing, startTime, endTime, startX, startY, endX, endY);
+                                break;
                             }
-                            break;
                             case "MX":
                             {
-                                var startValue = double.Parse(value[4]);
-                                var endValue = value.Length > 5 ? double.Parse(value[5]) : startValue;
+                                var startValue = double.Parse(v[4]);
+                                var endValue = v.Length > 5 ? double.Parse(v[5]) : startValue;
                                 sprite.MoveX(easing, startTime, endTime, startValue, endValue);
+                                break;
                             }
-                            break;
                             case "MY":
                             {
-                                var startValue = double.Parse(value[4]);
-                                var endValue = value.Length > 5 ? double.Parse(value[5]) : startValue;
+                                var startValue = double.Parse(v[4]);
+                                var endValue = v.Length > 5 ? double.Parse(v[5]) : startValue;
                                 sprite.MoveY(easing, startTime, endTime, startValue, endValue);
+                                break;
                             }
-                            break;
                             case "C":
                             {
-                                var startX = double.Parse(value[4]);
-                                var startY = double.Parse(value[5]);
-                                var startZ = double.Parse(value[6]);
-                                var endX = value.Length > 7 ? double.Parse(value[7]) : startX;
-                                var endY = value.Length > 8 ? double.Parse(value[8]) : startY;
-                                var endZ = value.Length > 9 ? double.Parse(value[9]) : startZ;
-                                sprite.Color(easing, startTime, endTime, startX / 255f, startY / 255f, startZ / 255f, endX / 255f, endY / 255f, endZ / 255f);
+                                var startX = double.Parse(v[4]) / 255;
+                                var startY = double.Parse(v[5]) / 255;
+                                var startZ = double.Parse(v[6]) / 255;
+                                var endX = v.Length > 7 ? double.Parse(v[7]) / 255 : startX;
+                                var endY = v.Length > 8 ? double.Parse(v[8]) / 255 : startY;
+                                var endZ = v.Length > 9 ? double.Parse(v[9]) / 255 : startZ;
+                                sprite.Color(easing, startTime, endTime, startX, startY, startZ, endX, endY, endZ);
+                                break;
                             }
-                            break;
                             case "P":
                             {
-                                var type = value[4];
-                                switch (type)
+                                switch (v[4])
                                 {
                                     case "A": sprite.Additive(startTime, endTime); break;
                                     case "H": sprite.FlipH(startTime, endTime); break;
                                     case "V": sprite.FlipV(startTime, endTime); break;
                                 }
+                                break;
                             }
-                            break;
                         }
                     }
                     break;
                 }
             }, false);
 
-            if (inCommandGroup)
+            if (loopable)
             {
                 sprite.EndGroup();
-                inCommandGroup = false;
+                loopable = false;
             }
         }
 
-        static string removePathQuotes(string path) => path.StartsWith("\"") && path.EndsWith("\"") ? path.Substring(1, path.Length - 2) : path;
+        static string removeQuotes(string path) => path.StartsWith("\"") && path.EndsWith("\"") ? 
+            path.Substring(1, path.Length - 2) : path;
+
         string applyVariables(string line)
         {
             if (!line.Contains("$")) return line;
