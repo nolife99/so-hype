@@ -70,7 +70,7 @@ namespace StorybrewScripts
                     .Add(endTime, RandEndPos.Z + 8000, EasingFunctions.QuintIn);
 
                 var scale = Random(.3f, .6f);
-                star.SpriteScale.Add(startTime, new Vector2(scale, scale));
+                star.SpriteScale.Add(startTime, scale, scale);
 
                 parent.Add(star);
             }
@@ -129,7 +129,7 @@ namespace StorybrewScripts
                 star.PositionZ.Add(startTime, RandEndPos.Z).Add(endTime, RandEndPos.Z + 4000);
 
                 var scale = Random(.25f, .5f);
-                star.SpriteScale.Add(startTime, new Vector2(scale, scale));
+                star.SpriteScale.Add(startTime, scale, scale);
 
                 parent.Add(star);
             }
@@ -182,7 +182,7 @@ namespace StorybrewScripts
                     .Add(endTime, RandEndPos.Z + 4000, EasingFunctions.SineIn);
 
                 var scale = Random(.25f, .5f);
-                star.SpriteScale.Add(startTime, new Vector2(scale, scale));
+                star.SpriteScale.Add(startTime, scale, scale);
 
                 parent.Add(star);
             }
