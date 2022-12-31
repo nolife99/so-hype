@@ -54,9 +54,10 @@ namespace StorybrewScripts
                 };
                 star.ConfigureGenerators(g =>
                 {
-                    g.PositionTolerance = 1;
-                    g.ScaleTolerance = 2;
-                    g.OpacityTolerance = 3;
+                    g.ScaleTolerance = 1;
+                    g.OpacityTolerance = 1;
+                    g.PositionDecimals = 6;
+                    g.ScaleDecimals = 6;
                 });
 
                 star.Opacity.Add(startTime, Random(.25f, .8f));
@@ -114,9 +115,10 @@ namespace StorybrewScripts
                 };
                 star.ConfigureGenerators(g =>
                 {
-                    g.PositionTolerance = 1;
-                    g.ScaleTolerance = 2;
-                    g.OpacityTolerance = 3;
+                    g.ScaleTolerance = 1;
+                    g.OpacityTolerance = 1;
+                    g.PositionDecimals = 6;
+                    g.ScaleDecimals = 6;
                 });
 
                 star.Opacity.Add(startTime, Random(.5f, 1));
@@ -164,9 +166,10 @@ namespace StorybrewScripts
                 };
                 star.ConfigureGenerators(g =>
                 {
-                    g.PositionTolerance = 1;
-                    g.ScaleTolerance = 2;
-                    g.OpacityTolerance = 3;
+                    g.ScaleTolerance = 1;
+                    g.OpacityTolerance = 1;
+                    g.PositionDecimals = 6;
+                    g.ScaleDecimals = 6;
                 });
 
                 star.Opacity.Add(startTime, Random(.25f, .8f));

@@ -161,15 +161,15 @@ namespace StorybrewScripts
                 sprite.Scale(easing, i, i + timeStep, 125, 85);
                 sprite.Fade(easing, i, i + timeStep, .8, 1);
             }
-            sprite.Rotate(startTime, DegreesToRadians(45));
+            sprite.Rotate(startTime, Pi / 4);
             sprite.Scale(easing, endTime, endTime + timeStep, 140, 0);
 
-            double angle = 0;
-            var scaleStart = 85;
-            var scaleEnd = 150;
+            var angle = 0d;
+            var scaleStart = 88;
+            var scaleEnd = 180;
             var pos = new Vector2(320, 240);
 
-            for (int i = 0; i < 4; i++)
+            for (var i = 0; i < 4; i++)
             {
                 var startPos = new Vector2(
                     (float)(pos.X + Cos(angle) * scaleStart),
@@ -186,9 +186,9 @@ namespace StorybrewScripts
                 border.Rotate(startTime, angle - Pi / 4);
                 for (double s = startTime; s < endTime - 1; s += timeStep)
                 {
-                    border.ScaleVec(easing, s, s + timeStep, 1.23, startScale + 0.5, 0.6, endScale);
+                    border.ScaleVec(easing, s, s + timeStep, 1.23, startScale + .5, .6, endScale);
                     border.Move(easing, s, s + timeStep, startPos, endPos);
-                    border.Fade(OsbEasing.In, s, s + timeStep, 0.8, 0);
+                    border.Fade(OsbEasing.In, s, s + timeStep, .9, 0);
                 }
                 angle += Pi / 2;
             }
