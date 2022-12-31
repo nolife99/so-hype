@@ -3,12 +3,22 @@ using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Storyboarding3d;
 using StorybrewCommon.Animations;
+using System;
+
 using static OpenTK.MathHelper;
 
 namespace StorybrewScripts
 {
     class Stars : StoryboardObjectGenerator
     {
+        Action<CommandGenerator> config = g =>
+        {
+            g.ScaleTolerance = 1;
+            g.OpacityTolerance = 1;
+            g.PositionDecimals = 6;
+            g.ScaleDecimals = 6;
+        };
+
         protected override void Generate()
         {
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
@@ -52,13 +62,7 @@ namespace StorybrewScripts
                     UseDistanceFade = true,
                     RotationMode = RotationMode.Fixed
                 };
-                star.ConfigureGenerators(g =>
-                {
-                    g.ScaleTolerance = 1;
-                    g.OpacityTolerance = 1;
-                    g.PositionDecimals = 6;
-                    g.ScaleDecimals = 6;
-                });
+                star.ConfigureGenerators(config);
 
                 star.Opacity.Add(startTime, Random(.25f, .8f));
 
@@ -113,13 +117,7 @@ namespace StorybrewScripts
                     UseDistanceFade = true,
                     RotationMode = RotationMode.Fixed
                 };
-                star.ConfigureGenerators(g =>
-                {
-                    g.ScaleTolerance = 1;
-                    g.OpacityTolerance = 1;
-                    g.PositionDecimals = 6;
-                    g.ScaleDecimals = 6;
-                });
+                star.ConfigureGenerators(config);
 
                 star.Opacity.Add(startTime, Random(.5f, 1));
 
@@ -164,13 +162,7 @@ namespace StorybrewScripts
                     UseDistanceFade = true,
                     RotationMode = RotationMode.Fixed
                 };
-                star.ConfigureGenerators(g =>
-                {
-                    g.ScaleTolerance = 1;
-                    g.OpacityTolerance = 1;
-                    g.PositionDecimals = 6;
-                    g.ScaleDecimals = 6;
-                });
+                star.ConfigureGenerators(config);
 
                 star.Opacity.Add(startTime, Random(.25f, .8f));
 

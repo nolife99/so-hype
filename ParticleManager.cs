@@ -32,8 +32,8 @@ namespace StorybrewScripts
             var startTime = 73368;
             var endTime = 92903;
             var amount = 21;
-            double angle = 90;
-            double radius = 150;
+            var angle = 90d;
+            var radius = 150d;
 
             for (var i = 0; i < amount; i++)
             {
@@ -120,24 +120,24 @@ namespace StorybrewScripts
                 var realStart = start + timeStep * (i / 2);
                 var fade = Random(.3, .6);
 
-                var square = GetLayer("beat").CreateSprite(circ ? "sb/cir.png" : "sb/px.png", 
-                    OsbOrigin.Centre, new Vector2(Random(-107, 747), 0));
+                var path = circ ? "sb/cir.png" : "sb/px.png";
+                var sq = GetLayer("beat").CreateSprite(path, OsbOrigin.Centre, new Vector2(Random(-107, 747), 0));
 
-                square.Fade(realStart, realStart + 150, 0, fade);
-                square.Scale(realStart, circ ? Random(.08, .16) : Random(10, 50));
-                square.Fade(end, end + 250, fade, 0);
-                square.Additive(realStart);
+                sq.Fade(realStart, realStart + 150, 0, fade);
+                sq.Scale(realStart, circ ? Random(.08, .16) : Random(10, 50));
+                sq.Fade(end, end + 250, fade, 0);
+                sq.Additive(realStart);
 
                 var posY = 500;
                 for (double s = realStart; s < end; s += timeStep)
                 {
                     var endY = posY - Random(27, 77);
-                    square.MoveY(OsbEasing.OutQuart, s, s + timeStep, posY, endY);
+                    sq.MoveY(OsbEasing.OutQuart, s, s + timeStep, posY, endY);
 
                     if (endY < -20)
                     {
                         posY = 510;
-                        square.MoveX(s + timeStep, Random(-107, 747));
+                        sq.MoveX(s + timeStep, Random(-107, 747));
                     }
                     else posY = endY;
                 }
@@ -145,8 +145,8 @@ namespace StorybrewScripts
                 if (circ) continue;
                 for (double r = realStart; r < end; r += timeStep * 2)
                 {
-                    square.Rotate(OsbEasing.OutQuart, r, r + timeStep, 0, PiOver4);
-                    square.Rotate(OsbEasing.OutQuart, r + timeStep, r + timeStep * 2, PiOver4, PiOver2);
+                    sq.Rotate(OsbEasing.OutQuart, r, r + timeStep, 0, PiOver4);
+                    sq.Rotate(OsbEasing.OutQuart, r + timeStep, r + timeStep * 2, PiOver4, PiOver2);
                 }
             }
         }
