@@ -11,8 +11,8 @@ namespace StorybrewScripts
 {
     class ImportOsb : StoryboardObjectGenerator
     {
-        string Path = "assetlibrary/controlled spectrum data.osb";
-        Dictionary<string, string> variables = new Dictionary<string, string>();
+        const string Path = "assetlibrary/controlled spectrum data.osb";
+        Dictionary<string, string> vars = new Dictionary<string, string>();
 
         protected override void Generate()
         {
@@ -29,7 +29,7 @@ namespace StorybrewScripts
         void parseVariables(StreamReader reader) => reader.ParseSectionLines(line =>
         {
             var v = line.Split('=');
-            if (v.Length == 2) variables.Add(v[0], v[1]);
+            if (v.Length == 2) vars.Add(v[0], v[1]);
         });
         void parseEvents(StreamReader reader)
         {
@@ -195,7 +195,7 @@ namespace StorybrewScripts
         string applyVariables(string line)
         {
             if (!line.Contains("$")) return line;
-            foreach (var entry in variables) line = line.Replace(entry.Key, entry.Value);
+            foreach (var entry in vars) line = line.Replace(entry.Key, entry.Value);
             return line;
         }
     }

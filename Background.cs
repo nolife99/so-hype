@@ -219,31 +219,26 @@ namespace StorybrewScripts
                 clap.Scale(OsbEasing.OutQuad, i, i + beatD * 1.5, 475f / bitmapH, 480f / bitmapH);
                 clap.Fade(i, i + beatD * 1.5, .8, 0);
             }
-
             for (double i = 151856; i < 156827; i += beatD * 2)
             {
                 clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
                 clap.Fade(i, i + beatD * 2, .8, 0);
             }
-
             for (double i = 157437; i < 161711; i += beatD * 2)
             {
                 clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
                 clap.Fade(i, i + beatD * 2, .8, 0);
             }
-
             for (double i = 163019; i < 172176; i += beatD * 2)
             {
                 clap.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
                 clap.Fade(i, i + beatD * 2, .8, 0);
             }
-
             for (double i = 173833; i < 182118; i += beatD)
             {
                 clap.Scale(OsbEasing.OutQuad, i, i + beatD, 475f / bitmapH, 480f / bitmapH);
                 clap.Fade(i, i + beatD, .8, 0);
             }
-
             for (double i = 182205; i < 183513; i += beatD / 2)
             {
                 clap.Scale(OsbEasing.OutQuad, i, i + beatD / 2, 475f / bitmapH, 480f / bitmapH);
@@ -256,13 +251,11 @@ namespace StorybrewScripts
                 snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
                 snare.Fade(i, i + beatD * 2, .8, 0);
             }
-
             for (double i = 157786; i < 161362; i += beatD * 2)
             {
                 snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
                 snare.Fade(i, i + beatD * 2, .8, 0);
             }
-
             for (double i = 162670; i < 171827; i += beatD * 2)
             {
                 snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
@@ -311,13 +304,11 @@ namespace StorybrewScripts
                 snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);
                 snare.Fade(i, i + beatD * 2, .8, 0);
             }
-
             for (double i = 266275; i < 268106; i += beatD * 1.5)
             {
                 snare.Scale(OsbEasing.OutQuad, i, i + beatD * 1.5, 475f / bitmapH, 480f / bitmapH);
                 snare.Fade(i, i + beatD * 1.5, .8, 0);
             }
-
             for (double i = 268716; i < 273687; i += beatD * 2)
             {
                 snare.Scale(OsbEasing.OutQuad, i, i + beatD * 2, 475f / bitmapH, 480f / bitmapH);

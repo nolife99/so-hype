@@ -46,7 +46,6 @@ namespace StorybrewScripts
         void MakeSphere(int start, int end, double size, uint split, Vector2i dots, double spinMult, 
             Action<OsbSprite, int, int> finalize = null)
         {
-            // Constants
             var beat = Beatmap.GetTimingPointAt(start).BeatDuration;
             var spinDur = beat * spinMult;
             var rotFunc = new Quaterniond(DegreesToRadians(42.5), 0, DegreesToRadians(25));
@@ -59,7 +58,6 @@ namespace StorybrewScripts
             var i = 1;
             for (double r = 0; r < dots.X; r++, i++) for (double c = 1; c < dots.Y; c++)
             {
-                // Sphere splitting
                 if (i > split && i < split * 2) break;
                 else if (i == split * 2) i = 1;
 

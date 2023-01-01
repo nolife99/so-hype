@@ -11,7 +11,7 @@ namespace StorybrewScripts
 {
     class Stars : StoryboardObjectGenerator
     {
-        Action<CommandGenerator> config = g =>
+        readonly Action<CommandGenerator> config = g =>
         {
             g.ScaleTolerance = 1;
             g.OpacityTolerance = 1;
@@ -73,8 +73,7 @@ namespace StorybrewScripts
                     .Add(startTime + duration / 2, RandEndPos.Z + 2000, EasingFunctions.QuadOut)
                     .Add(endTime, RandEndPos.Z + 8000, EasingFunctions.QuintIn);
 
-                var scale = Random(.3f, .6f);
-                star.SpriteScale.Add(startTime, scale, scale);
+                star.SpriteScale.Add(startTime, Random(.3f, .6f));
 
                 parent.Add(star);
             }
@@ -126,8 +125,7 @@ namespace StorybrewScripts
 
                 star.PositionZ.Add(startTime, RandEndPos.Z).Add(endTime, RandEndPos.Z + 4000);
 
-                var scale = Random(.25f, .5f);
-                star.SpriteScale.Add(startTime, scale, scale);
+                star.SpriteScale.Add(startTime, Random(.25f, .5f));
 
                 parent.Add(star);
             }
@@ -173,8 +171,7 @@ namespace StorybrewScripts
                     .Add(207321, RandEndPos.Z + 800, EasingFunctions.SineOut)
                     .Add(endTime, RandEndPos.Z + 4000, EasingFunctions.SineIn);
 
-                var scale = Random(.25f, .5f);
-                star.SpriteScale.Add(startTime, scale, scale);
+                star.SpriteScale.Add(startTime, Random(.25f, .5f));
 
                 parent.Add(star);
             }

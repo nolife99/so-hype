@@ -2,6 +2,7 @@ using OpenTK;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Animations;
+using System;
 using static System.Math;
 
 namespace StorybrewScripts
@@ -104,7 +105,7 @@ namespace StorybrewScripts
                 keyframe.ForEachPair((s, e) => bar.ScaleVec(s.Time, e.Time, scale.X, s.Value, scale.X, e.Value), 1);
             }
         }
-        void CaptureVocals()
+        [Obsolete("Unused, represents code in ImportOsb script")] void CaptureVocals()
         {
             using (var pool = new SpritePool(GetLayer("ControlledSpec"), "sb/px.png", new Vector2(320, 240), (p, s, e) =>
             {
