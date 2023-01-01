@@ -11,12 +11,12 @@ namespace StorybrewScripts
 {
     class ImportOsb : StoryboardObjectGenerator
     {
-        const string Path = "assetlibrary/controlled spectrum data.osb";
         Dictionary<string, string> vars = new Dictionary<string, string>();
 
         protected override void Generate()
         {
-            using (var file = OpenProjectFile(Path)) using (var reader = new StreamReader(file, new UTF8Encoding()))
+            using (var file = OpenProjectFile("assetlibrary/controlled spectrum data.osb")) 
+            using (var reader = new StreamReader(file, new UTF8Encoding()))
             reader.ParseSections(section =>
             {
                 switch (section)

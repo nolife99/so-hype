@@ -24,13 +24,10 @@ namespace StorybrewScripts
             PulsingSquare(115577, 126391);
             PulsingSquare(173833, 183600);
             PulsingSquare(229647, 249182);
-
-            RotatingLines();
+            RotatingLines(73368, 92903);
         }
-        void RotatingLines()
+        void RotatingLines(int startTime, int endTime)
         {
-            var startTime = 73368;
-            var endTime = 92903;
             var amount = 21;
             var angle = 90d;
             var radius = 150d;
@@ -53,7 +50,7 @@ namespace StorybrewScripts
                 var timeStep = Beatmap.GetTimingPointAt(startTime).BeatDuration / 8;
                 for (double time = startTime; time < endTime + timeStep; time += timeStep)
                 {
-                    angle -= 0.04;
+                    angle -= .04;
 
                     var nPosition = new Vector2(
                         (float)(320 + Cos(angle) * radius),
@@ -91,8 +88,8 @@ namespace StorybrewScripts
                 var endX = middleX + Random(-50, 50);
 
                 sprite.ColorHsb(start, 0, 0, Random(1f));
+                sprite.Additive(start);
                 sprite.StartLoopGroup(start + i * 70, (end - (start + i * 35)) / duration);
-                sprite.Additive(0, duration);
                 sprite.Fade(OsbEasing.Out, 0, fadeTime, 0, fade);
                 sprite.Fade(OsbEasing.In, duration - fadeTime, duration, fade, 0);
                 sprite.Scale(0, duration, Random(.025, .05), Random(.025, .05));
