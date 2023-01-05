@@ -48,7 +48,7 @@ namespace StorybrewScripts
         {
             var beat = Beatmap.GetTimingPointAt(start).BeatDuration;
             var spinDur = beat * spinMult;
-            var rotFunc = new Quaterniond(DegreesToRadians(42.5), 0, DegreesToRadians(25));
+            var rotFunc = new Quaterniond(DegreesToRadians(42.5), 0, DegreesToRadians(17.5));
 
             var back = GetLayer("").CreateSprite("sb/dot.png", OsbOrigin.Centre, new Vector2(317, 238));
             back.Scale(OsbEasing.OutBack, start, start + beat * 4, 0, 4.5);
