@@ -33,7 +33,7 @@ namespace StorybrewScripts
             for (double time = startTime; time < endTime; time += timeStep)
             {
                 var fft = GetFft(time, fftCount, null, OsbEasing.InExpo);
-                for (var i = 0; i < fftCount; i++)
+                for (var i = 0; i < BarCount; i++)
                 {
                     var height = Pow(Log10(1 + fft[i] * 470), 1.6) * scale.Y / bMap.Height;
                     if (height < 1) height = 1;
@@ -79,7 +79,7 @@ namespace StorybrewScripts
             for (double t = startTime; t <= endTime + 10; t += timeStep)
             {
                 var fft = GetFft(t, fftCount, null, OsbEasing.InExpo);
-                for (var i = 0; i < fftCount; i++)
+                for (var i = 0; i < BarCount; i++)
                 {
                     var val = Log10(1 + fft[i] * 5) * scale.Y;
                     if (val < 1) val = 1;

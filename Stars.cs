@@ -48,9 +48,9 @@ namespace StorybrewScripts
             var parent = scene.Root;
 
             parent.Rotation.Add(startTime, new Quaternion(DegreesToRadians(25), 0, DegreesToRadians(25)))
-                .Add(startTime + 2000, new Quaternion(Vector3.Zero), EasingFunctions.CubicOut)
+                .Add(startTime + 2000, new Quaternion(Vector3.Zero), EasingFunctions.BackOut)
                 .Until(endTime - 5000)
-                .Add(endTime, new Quaternion(DegreesToRadians(-45), 0, DegreesToRadians(10)), EasingFunctions.QuintIn);
+                .Add(endTime, new Quaternion(DegreesToRadians(-10), 0, DegreesToRadians(45)), EasingFunctions.QuintIn);
 
             for (var i = 0; i < 1000; i++)
             {
@@ -64,7 +64,7 @@ namespace StorybrewScripts
                 };
                 star.ConfigureGenerators(config);
 
-                star.Opacity.Add(startTime, Random(.25f, .8f));
+                star.Opacity.Add(startTime, Random(.4f, .8f));
 
                 star.PositionX.Add(startTime, RandEndPos.X);
                 star.PositionY.Add(startTime, RandEndPos.Y);
@@ -125,11 +125,11 @@ namespace StorybrewScripts
 
                 star.PositionZ.Add(startTime, RandEndPos.Z).Add(endTime, RandEndPos.Z + 4000);
 
-                star.SpriteScale.Add(startTime, Random(.25f, .5f));
+                star.SpriteScale.Add(startTime, Random(.4f, .5f));
 
                 parent.Add(star);
             }
-            scene.Generate(camera, GetLayer(""), startTime, endTime, Beatmap.GetTimingPointAt(startTime).BeatDuration / 6);
+            scene.Generate(camera, GetLayer(""), startTime, endTime, Beatmap.GetTimingPointAt(startTime).BeatDuration / 8);
         }
         void Scene3(int startTime, int endTime)
         {
@@ -162,7 +162,7 @@ namespace StorybrewScripts
                 };
                 star.ConfigureGenerators(config);
 
-                star.Opacity.Add(startTime, Random(.25f, .8f));
+                star.Opacity.Add(startTime, Random(.4f, .8f));
 
                 star.PositionX.Add(startTime, RandEndPos.X);
                 star.PositionY.Add(startTime, RandEndPos.Y);
@@ -175,7 +175,7 @@ namespace StorybrewScripts
 
                 parent.Add(star);
             }
-            scene.Generate(camera, GetLayer(""), startTime, endTime, Beatmap.GetTimingPointAt(startTime).BeatDuration / 4);
+            scene.Generate(camera, GetLayer(""), startTime, endTime, Beatmap.GetTimingPointAt(startTime).BeatDuration / 8);
 
             var fadeIn = GetLayer("").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
             fadeIn.ScaleVec(startTime, 854, 480);
