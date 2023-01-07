@@ -9,6 +9,8 @@ namespace StorybrewScripts
 {
     class HitObjects : StoryboardObjectGenerator
     {
+        [Configurable] public bool UseSpritePool = true;
+
         protected override void Generate()
         {
             Trail(25926, 37001, true);
@@ -35,8 +37,9 @@ namespace StorybrewScripts
         }
         void DotBurst(int startTime, int endTime)
         {
-            using (var pool = new SpritePool(GetLayer(""), "sb/dot.png", true)) foreach (var hit in Beatmap.HitObjects) 
-                if (hit.StartTime >= startTime && hit.EndTime <= endTime) for (var i = 0; i < Random(20, 25); i++)
+            using (var pool = new SpritePool(GetLayer(""), "sb/dot.png", true)) 
+            foreach (var hit in Beatmap.HitObjects) if (hit.StartTime >= startTime && hit.EndTime <= endTime) 
+                for (var i = 0; i < Random(20, 25); i++)
             {
                 var angle = Random(PI * 2);
                 var radius = Random(50f, 120);
@@ -46,9 +49,12 @@ namespace StorybrewScripts
 
                 var duration = Random(1000, 2000);
 
-                var sprite = pool.Get(hit.StartTime, hit.StartTime + duration);
+                var sprite = UseSpritePool ? 
+                    pool.Get(hit.StartTime, hit.StartTime + duration) : GetLayer("").CreateSprite("sb/dot.png");
                 sprite.Scale(OsbEasing.InQuad, hit.StartTime, hit.StartTime + duration, radius * 5E-4, 0);
                 sprite.Move(OsbEasing.OutExpo, hit.StartTime, hit.StartTime + duration, startPos, endPos);
+
+                if (!UseSpritePool) sprite.Additive(hit.StartTime);
 
                 if ((Color4)sprite.ColorAt(hit.StartTime) != hit.Color) sprite.Color(hit.StartTime, hit.Color);
             }
@@ -58,13 +64,19 @@ namespace StorybrewScripts
             using (var pool = new SpritePool(GetLayer(""), "sb/hl.png", (light, start, end) =>
             {
                 light.Additive(start);
-                light.Scale(start, 0.1);
+                light.Scale(start, .1);
             })) 
             foreach (var hit in Beatmap.HitObjects) if (hit.StartTime >= startTime && hit.StartTime <= endTime)
             {
                 var pos = hit.Position + hit.StackOffset;
-                var sprite = pool.Get(hit.StartTime, hit.StartTime + 1500);
-                sprite.Move(hit.StartTime, pos);
+                var sprite = UseSpritePool ? 
+                    pool.Get(hit.StartTime, hit.StartTime + 1500) : GetLayer("").CreateSprite("sb/hl.png", OsbOrigin.Centre, hit.Position);
+                if (UseSpritePool) sprite.Move(hit.StartTime, pos);
+                else
+                {
+                    sprite.Additive(hit.StartTime);
+                    sprite.Scale(hit.StartTime, .1);
+                }
                 sprite.Fade(hit.StartTime, hit.StartTime + 1500, 0.45, 0);
                 if ((Color4)sprite.ColorAt(hit.StartTime) != hit.Color) sprite.Color(hit.StartTime, hit.Color);
 
@@ -75,7 +87,8 @@ namespace StorybrewScripts
 
                     while (true)
                     {
-                        var stepSprite = pool.Get(sTime, hit.EndTime + 1500);
+                        var stepSprite = UseSpritePool ? 
+                            pool.Get(sTime, hit.EndTime + 1500) : GetLayer("").CreateSprite("sb/hl.png");
 
                         var slidePos = hit.PositionAtTime(sTime);
                         if (collect)
@@ -87,6 +100,12 @@ namespace StorybrewScripts
                         {
                             stepSprite.Move(sTime, slidePos);
                             if ((Color4)stepSprite.ColorAt(sTime) != hit.Color) stepSprite.Color(sTime, hit.Color);
+                        }
+
+                        if (!UseSpritePool)
+                        {
+                            stepSprite.Additive(sTime);
+                            stepSprite.Scale(sTime, .1);
                         }
                         stepSprite.Fade(OsbEasing.InQuad, sTime, hit.EndTime + 1500, 0.35, 0);
 
@@ -105,11 +124,14 @@ namespace StorybrewScripts
             {
                 if (i > 1) i = 0;
 
-                var sprite = pool.Get(hit.StartTime, hit.EndTime + 1000);
+                var sprite = UseSpritePool ? 
+                    pool.Get(hit.StartTime, hit.EndTime + 1000) : GetLayer("").CreateSprite("sb/px.png", OsbOrigin.Centre, hit.Position + hit.StackOffset);
                 var angle = .17 + i * PI / 2;
                 if (sprite.RotationAt(hit.StartTime) != angle) sprite.Rotate(hit.StartTime, angle);
 
-                sprite.Move(hit.StartTime, hit.Position + hit.StackOffset);
+                if (UseSpritePool) sprite.Move(hit.StartTime, hit.Position + hit.StackOffset);
+                else sprite.Additive(hit.StartTime);
+                
                 sprite.ScaleVec(OsbEasing.OutQuint, hit.StartTime, hit.EndTime + 1000, 2.5, 0, 1, 1400);
 
                 if ((Color4)sprite.ColorAt(hit.StartTime) != hit.Color) sprite.Color(hit.StartTime, hit.Color);

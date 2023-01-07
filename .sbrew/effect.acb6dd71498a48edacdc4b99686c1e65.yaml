@@ -3,6 +3,9 @@ Name: "HitObjects 1"
 Script: "HitObjects"
 Multithreaded: No
 Config:
+  UseSpritePool:
+    Type: "System.Boolean"
+    Value: "True"
   RandomSeed:
     Type: "System.Int32"
     Value: "0"
