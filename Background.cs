@@ -40,7 +40,7 @@ namespace StorybrewScripts
             Flash(36391, 37089, .5);
             Flash(36740, 37089, .5);
             Flash(37089, 38484, .6);
-            Flash(42670, 44065, .5);
+            Flash(42670, 44065, .3);
             Flash(48949, 51042);
             Flash(53833, 55228, .6);
             Flash(59414, 60810, .8);

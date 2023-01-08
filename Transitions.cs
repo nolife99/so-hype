@@ -29,7 +29,7 @@ namespace StorybrewScripts
             BarTrans(124996, 126391, side: true, finalize: p => p.Color(126740, 1, 1, 1));
             BarTrans(146100, 148193, 1, true, finalize: p => p.Color(148716, 0, 0, 0));
             BarTrans(148019, 148716, finalize: p => p.Color(148716, 1, 1, 1));
-            BarTrans(172437, 173833, .5);
+            BarTrans(172437, 173833, .5, finalize: p => p.Color(172437, 173833, .8, .8, .8, 1, 1, 1));
             BarTrans(183600, 184996, .5, side: true, finalize: p => p.Color(183600, 0, 0, 0));
 
             BarStatic(229647, 231042, 10, true, true);
@@ -38,7 +38,7 @@ namespace StorybrewScripts
             BarTrans(250577, 251972, side: true);
             BarTrans(257030, 257554, finalize: p => p.Color(258251, 1, 1, 1));
 
-            BarStatic(268368, 268716, 15, true);
+            BarStatic(268368, 268716, 15, true, finalize: p => p.Color(268368, 268716, .8, .8, .8, 1, 1, 1));
 
             SequenceTransition(274298);
         }
@@ -55,7 +55,7 @@ namespace StorybrewScripts
                     var sprite = GetLayer("").CreateSprite("sb/px.png",
                         i % 2 == 0 ? OsbOrigin.CentreLeft : OsbOrigin.CentreRight,
                         new Vector2(i % 2 == 0 ? -107 : 747, (float)offset));
-                    sprite.ScaleVec(OsbEasing.OutExpo, startTime, endTime, _out ? 854 : 0, width, _out ? 0 : 854, width);
+                    sprite.ScaleVec(OsbEasing.OutQuint, startTime, endTime, _out ? 854 : 0, width, _out ? 0 : 854, width);
                     if (finalize != null) finalize(sprite);
                 }
                 else
@@ -63,7 +63,7 @@ namespace StorybrewScripts
                     var sprite = GetLayer("").CreateSprite("sb/px.png",
                         i % 2 == 0 ? OsbOrigin.TopCentre : OsbOrigin.BottomCentre,
                         new Vector2((float)offset, i % 2 == 0 ? 0 : 480));
-                    sprite.ScaleVec(OsbEasing.OutExpo, startTime, endTime, width, _out ? 480 : 0, width, _out ? 0 : 480);
+                    sprite.ScaleVec(OsbEasing.OutQuint, startTime, endTime, width, _out ? 480 : 0, width, _out ? 0 : 480);
                     if (finalize != null) finalize(sprite);
                 }
                 
@@ -85,7 +85,7 @@ namespace StorybrewScripts
                     var sprite = GetLayer("").CreateSprite("sb/px.png",
                         i % 2 == 0 ? OsbOrigin.CentreLeft : OsbOrigin.CentreRight,
                         new Vector2(i % 2 == 0 ? -107 : 747, (float)offset));
-                    sprite.ScaleVec(OsbEasing.OutCubic, startTime + delay, endTime, 0, width, 854, width);
+                    sprite.ScaleVec(OsbEasing.OutQuint, startTime + delay, endTime, 0, width, 854, width);
                     if (finalize != null) finalize(sprite);
                 }
                 else
@@ -93,7 +93,7 @@ namespace StorybrewScripts
                     var sprite = GetLayer("").CreateSprite("sb/px.png",
                         i % 2 == 0 ? OsbOrigin.TopCentre : OsbOrigin.BottomCentre,
                         new Vector2((float)offset, i % 2 == 0 ? 0 : 480));
-                    sprite.ScaleVec(OsbEasing.OutCubic, startTime + delay, endTime, width, 0, width, 480);
+                    sprite.ScaleVec(OsbEasing.OutQuint, startTime + delay, endTime, width, 0, width, 480);
                     if (finalize != null) finalize(sprite);
                 }
                 

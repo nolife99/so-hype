@@ -5,13 +5,14 @@ using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Subtitles;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System;
 
 namespace StorybrewScripts
 {
     class Lyrics : StoryboardObjectGenerator
     {
-        FontGenerator font;
+        FontGenerator font, font2;
         double beat;
 
         protected override void Generate()
@@ -26,16 +27,27 @@ namespace StorybrewScripts
                 FontSize = 50,
                 TrimTransparency = true
             });
+            font2 = LoadFont($"{AssetPath}/fontCache", new FontDescription
+            {
+                FontPath = $"{ProjectPath}/assetlibrary/NotoSansJP.otf",
+                Color = Color4.White,
+                FontSize = 50
+            });
 
-            MakePixelLine("誰の目も気にしないで", 28542, 31507);
+            MakePixelLine("誰の目も気にしない", 28542, 31507);
             MakePixelLine("終わらない future sound を", 34123, 37089);
+            MakePixelLine("Future sound を", 41275, 42670, 60);
             MakePixelLine("終わらない future sound を", 56449, 59414);
             MakePixelLine("Time is over...", 71275, 73368);
             MakePixelLine("Time is over...", 93600, 95693);
-            MakePixelLine("I'm a dreamer...", 104763, 106856, 20);
-            MakePixelLine("終わらない future sound を", 159705, 161972);
+            MakePixelLine("I'm a dreamer...", 104763, 106856, 60);
+            MakePixelLine("終わらない future", 159705, 161972);
             MakePixelLine("終わらない future sound を", 170868, 173833);
-            MakePixelLine("終わらない future sound を", 265751, 268368);
+            MakePixelLine("終わらない future sound", 265751, 268368);
+
+            MakePixelLine("PSYQUI - Hype ft. Such", 190577, 196158);
+            MakePixelLine("Mapset - Nines", 196158, 201740);
+            MakePixelLine("SB - bignoobdyl", 201740, 207321);
 
             using (var pool = new SpritePools(GetLayer("")))
             {
@@ -124,36 +136,30 @@ namespace StorybrewScripts
                 MakeLine("どこへ どこへ)", 293833, 296449);
             }
         }
-        void MakePixelLine(string line, int startTime, int endTime, float fontY = 197)
+        void MakePixelLine(string line, int startTime, int endTime, float fontY = 240)
         {
-            Func<string, List<Vector2>> PixelArray = path =>
+            Func<string, List<Vector2>> GetPixelArray = path =>
             {
-                var bitmapOri = new Bitmap(MapsetPath + "/" + path);
-                var bitmap = new Bitmap(bitmapOri, new Size(bitmapOri.Width, bitmapOri.Height));
-
-                var sprites = new List<Vector2>();
-                for (var y = 0; y < bitmap.Height; y += Random(7, 8) / 2) for (var x = 0; x < bitmap.Width; x += Random(7, 8) / 2) 
+                using (var bitmap = new Bitmap(Path.Combine(MapsetPath, path)))
                 {
-                    var pixel = bitmap.GetPixel(x, y);
-                    if (pixel.R <= 0 || pixel.A <= 0) continue;
+                    var pixels = new List<Vector2>();
+                    for (var y = 0; y < bitmap.Height; y += 7 / 2) for (var x = 0; x < bitmap.Width; x += 7 / 2) 
+                    {
+                        var pixel = bitmap.GetPixel(x, y);
+                        if (pixel.R <= 20 || pixel.A <= 20) continue;
 
-                    sprites.Add(new Vector2(x, y) * .8f);
+                        pixels.Add(new Vector2(x, y) * .8f);
+                    }
+                    
+                    return pixels;
                 }
-
-                bitmap.Dispose();
-                bitmapOri.Dispose();
-                
-                return sprites;
             };
 
             var width = 0f;
-            var height = 0f;
-
             foreach (var letter in line)
             {
                 var texture = font.GetTexture(letter.ToString());
                 width += texture.BaseWidth * .8f;
-                height = Math.Max(height, texture.BaseHeight * .8f);
             }
 
             var letterX = 320 - width * .5f;
@@ -163,8 +169,8 @@ namespace StorybrewScripts
                 var texture = font.GetTexture(letter.ToString());
                 if (!texture.IsEmpty)
                 {
-                    var position = new Vector2(letterX, fontY) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
-                    var pixels = PixelArray(texture.Path);
+                    var position = new Vector2(letterX, fontY - 43) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
+                    var pixels = GetPixelArray(texture.Path);
                     
                     foreach (var pixel in pixels)
                     {
