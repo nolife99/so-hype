@@ -76,7 +76,7 @@ namespace StorybrewScripts
         }
         void RingRise(int start, int end)
         {
-            for (var i = 0; i < 70; i++)
+            for (var i = 0; i < 100; i++)
             {
                 var sprite = GetLayer("").CreateSprite("sb/rw.png");
 
@@ -93,7 +93,7 @@ namespace StorybrewScripts
                 sprite.Fade(OsbEasing.Out, 0, fadeTime, 0, fade);
                 sprite.Fade(OsbEasing.In, duration - fadeTime, duration, fade, 0);
                 sprite.Scale(0, duration, Random(.025, .05), Random(.025, .05));
-                sprite.MoveY(OsbEasing.In, 0, duration, Random(400, 500), Random(-20, 0));
+                sprite.MoveY(0, duration, Random(400, 500), Random(-20, 0));
 
                 var shift = Random(50, 150);
                 if (startX >= 320)
@@ -111,10 +111,10 @@ namespace StorybrewScripts
         }
         void BeatShapes(int start, int end, bool circ = false)
         {
-            for (var i = 0; i < (circ ? 20 : 30); i++)
+            for (var i = 0; i < (circ ? 25 : 50); i++)
             {
                 var timeStep = Beatmap.GetTimingPointAt(start).BeatDuration;
-                var realStart = start + timeStep * (i / 2);
+                var realStart = start + timeStep * (i / 3);
                 var fade = Random(.3, .6);
 
                 var path = circ ? "sb/cir.png" : "sb/px.png";

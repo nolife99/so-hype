@@ -9,7 +9,7 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            BarStatic(25926, 26623, 30, true, true);
+            BarStatic(25926, 26623, 15, true, true);
             BarTrans(45461, 46856, finalize: p => p.Color(47554, 0, 0, 0));
             BarTrans(64996, 65780, .75, finalize: p => p.Color(66042, 0, 0, 0));
 
@@ -27,14 +27,18 @@ namespace StorybrewScripts
 
             BarStatic(104065, 105461, 10, true, true);
             BarTrans(124996, 126391, side: true, finalize: p => p.Color(126740, 1, 1, 1));
-
+            BarTrans(146100, 148193, 1, true, finalize: p => p.Color(148716, 0, 0, 0));
+            BarTrans(148019, 148716, finalize: p => p.Color(148716, 1, 1, 1));
             BarTrans(172437, 173833, .5);
+            BarTrans(183600, 184996, .5, side: true, finalize: p => p.Color(183600, 0, 0, 0));
 
             BarStatic(229647, 231042, 10, true, true);
 
             BarTrans(249182, 250577, finalize: p => p.Color(251972, 0, 0, 0));
             BarTrans(250577, 251972, side: true);
             BarTrans(257030, 257554, finalize: p => p.Color(258251, 1, 1, 1));
+
+            BarStatic(268368, 268716, 15, true);
 
             SequenceTransition(274298);
         }

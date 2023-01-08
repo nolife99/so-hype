@@ -23,9 +23,9 @@ namespace StorybrewScripts
             beatD = Beatmap.GetTimingPointAt(48949).BeatDuration;
             beat = (int)beatD;
 
-            ScreenFillHighlight(25228, 25926, 25926, 26275);
-            ScreenFillHighlight(102670, 103891, 104065, 104414);
-            ScreenFillHighlight(226856, 228949, 229647, 229996);
+            ScreenFillHighlight(25228, 25926);
+            ScreenFillHighlight(102670, 104065);
+            ScreenFillHighlight(226856, 229647);
 
             Flash(28542, 29414, .6);
             Flash(29937, 30809, .5);
@@ -54,7 +54,7 @@ namespace StorybrewScripts
             Flash(126740, 129182);
             Flash(137554, 138949, .8);
             Flash(145926, 147670, .6);
-            Flash(148716, 149414, .5);
+            Flash(148716, 149414);
             Flash(151507, 154298);
             Flash(157437, 158484);
             Flash(162670, 164065);
@@ -91,11 +91,10 @@ namespace StorybrewScripts
             AfterCalm1();
             LastKiai();
         }
-        void ScreenFillHighlight(int startScale, int startTime, int endTime, int endFade)
+        void ScreenFillHighlight(int startScale, int endTime)
         {
             var sprite = GetLayer("Flash").CreateSprite("sb/hl.png", OsbOrigin.Centre, new Vector2(320, 240));
-            sprite.Scale(OsbEasing.InQuint, startScale, startTime, 0, 5);
-            sprite.Fade(endTime, endFade, 1, 0);
+            sprite.Scale(OsbEasing.InQuint, startScale, endTime, 0, 6);
         }
         void Flash(int startTime, int endTime, double fade = 1)
         {
