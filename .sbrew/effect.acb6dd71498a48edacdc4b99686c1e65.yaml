@@ -20,4 +20,4 @@ Layers:
     Name: ""
     OsbLayer: Background
     DiffSpecific: No
-    Visible: Yes
+    Visible: No

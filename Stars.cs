@@ -27,7 +27,7 @@ namespace StorybrewScripts
                 var duration = e - s;
 
                 p.Rotation.Add(s, new Quaternion(DegreesToRadians(25), 0, DegreesToRadians(25)))
-                    .Add(s + 2000, new Quaternion(Vector3.Zero), EasingFunctions.BackOut)
+                    .Add(s + 2000, Quaternion.Identity, EasingFunctions.BackOut)
                     .Until(e - 5000)
                     .Add(e, new Quaternion(DegreesToRadians(-10), 0, DegreesToRadians(45)), EasingFunctions.QuintIn);
 
@@ -56,11 +56,11 @@ namespace StorybrewScripts
 
                     p.Add(star);
                 }
-            });
+            }, true);
             SceneConstructor(92903, 104065, (s, e, p) =>
             {
                 p.Rotation.Add(s, new Quaternion(DegreesToRadians(20), 0, DegreesToRadians(20)))
-                    .Add(s + 2000, new Quaternion(0, 0, 0), EasingFunctions.CubicOut);
+                    .Add(s + 2000, Quaternion.Identity, EasingFunctions.CubicOut);
 
                 for (var i = 0; i < 1000; i++)
                 {
@@ -127,10 +127,10 @@ namespace StorybrewScripts
             camera.PositionY.Add(startTime, 0).Add(endTime, 0);
             camera.PositionZ.Add(startTime, 150).Add(endTime, 200);
 
-            camera.NearClip.Add(startTime, 45);
+            camera.NearClip.Add(startTime, 150);
             camera.FarClip.Add(startTime, 4500);
 
-            camera.NearFade.Add(startTime, 10);
+            camera.NearFade.Add(startTime, 100);
             camera.FarFade.Add(startTime, 1000);
 
             var parent = scene.Root;

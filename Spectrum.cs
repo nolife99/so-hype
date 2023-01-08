@@ -13,10 +13,11 @@ namespace StorybrewScripts
         {
             // If you don't have the beatmap use ImportOsb 
             // CaptureVocals();
-            MakeSpectrum(48949, 70577);
+            MakeSpectrum(48949, 65780);
             MakeRadial(126740, 145926);
             MakeSpectrum(151507, 173833);
-            MakeSpectrum(258251, 279879);
+            MakeSpectrum(258251, 265926);
+            MakeSpectrum(268716, 275083);
         }
         void MakeSpectrum(int startTime, int endTime)
         {
@@ -50,7 +51,7 @@ namespace StorybrewScripts
 
                 var sprite = GetLayer("").CreateSprite("sb/pl.png", OsbOrigin.Centre, new Vector2(basePos.X + i * width, basePos.Y));
                 sprite.Fade(startTime, startTime + 500, 0, .5);
-                sprite.Fade(endTime - 500, endTime, .5, 0);
+                sprite.Fade(endTime, endTime + 500, .5, 0);
                 sprite.Additive(startTime);
 
                 var scaleX = (double)scale.X * width / bMap.Width; scaleX = Floor(scaleX * 10) / 10f;

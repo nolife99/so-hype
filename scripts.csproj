@@ -60,6 +60,7 @@
     <Compile Include="Spectrum.cs" />
     <Compile Include="Sphere.cs" />
     <Compile Include="Stars.cs" />
+    <Compile Include="Transitions.cs" />
   </ItemGroup>
   <ItemGroup />
 </Project>
