@@ -5,25 +5,37 @@ using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Subtitles;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System;
 
 namespace StorybrewScripts
 {
     class Lyrics : StoryboardObjectGenerator
     {
+        FontGenerator font;
+        double beat;
+
         protected override void Generate()
         {
             var scale = .3f;
-            var beat = Beatmap.GetTimingPointAt(4298).BeatDuration;
+            beat = Beatmap.GetTimingPointAt(4298).BeatDuration;
             
-            var font = LoadFont("sb/f", new FontDescription
+            font = LoadFont("sb/f", new FontDescription
             {
                 FontPath = $"{ProjectPath}/assetlibrary/NotoSansJP.otf",
                 Color = Color4.White,
                 FontSize = 50,
                 TrimTransparency = true
             });
+
+            MakePixelLine("誰の目も気にしないで", 28542, 31507);
+            MakePixelLine("終わらない future sound を", 34123, 37089);
+            MakePixelLine("終わらない future sound を", 56449, 59414);
+            MakePixelLine("Time is over", 71275, 73368);
+            MakePixelLine("Time is over", 93600, 95693);
+            MakePixelLine("I'm a dreamer", 104763, 106856, 20);
+            MakePixelLine("終わらない future sound を", 159705, 161972);
+            MakePixelLine("終わらない future sound を", 170868, 173833);
+            MakePixelLine("終わらない future sound を", 265751, 268368);
 
             using (var pool = new SpritePools(GetLayer("")))
             {
@@ -81,7 +93,6 @@ namespace StorybrewScripts
                 MakeLine("Music 僕らずっと", 23135, 24530);
                 MakeLine("So hype", 24879, 25751);
 
-                MakeLine("Time is over-er-er-", 71275, 73193);
                 MakeLine("あって make me groove?", 73368, 75461);
                 MakeLine("誰の目も気にしないで", 75809, 79472);
                 MakeLine("You will get high 宇宙へ", 79647, 81565);
@@ -91,8 +102,6 @@ namespace StorybrewScripts
                 MakeLine("Music 僕らずっと", 90112, 91507);
                 MakeLine("So hype", 91856, 92903);
 
-                MakeLine("(Time is over)", 93600, 95344);
-                MakeLine("(I'm a dreamer)", 104763, 106507);
                 MakeLine("終わらない future sound を", 109298, 112263);
                 MakeLine("Music 僕らずっと", 112437, 113920);
 
@@ -114,7 +123,9 @@ namespace StorybrewScripts
                 MakeLine("(ここにはいないような", 290868, 293484);
                 MakeLine("どこへ どこへ)", 293833, 296449);
             }
-
+        }
+        void MakePixelLine(string line, int startTime, int endTime, float fontY = 197)
+        {
             Func<string, List<Vector2>> PixelArray = path =>
             {
                 var bitmapOri = new Bitmap(MapsetPath + "/" + path);
@@ -134,50 +145,43 @@ namespace StorybrewScripts
                 
                 return sprites;
             };
-            Action<string, int, int> MakePixelLine = (line, startTime, endTime) =>
+
+            var width = 0f;
+            var height = 0f;
+
+            foreach (var letter in line)
             {
-                var width = 0f;
-                var height = 0f;
+                var texture = font.GetTexture(letter.ToString());
+                width += texture.BaseWidth * .8f;
+                height = Math.Max(height, texture.BaseHeight * .8f);
+            }
 
-                foreach (var letter in line)
+            var letterX = 320 - width * .5f;
+
+            foreach (var letter in line)
+            {
+                var texture = font.GetTexture(letter.ToString());
+                if (!texture.IsEmpty)
                 {
-                    var texture = font.GetTexture(letter.ToString());
-                    width += texture.BaseWidth * .8f;
-                    height = Math.Max(height, texture.BaseHeight * .8f);
-                }
-
-                var letterX = 320 - width * .5f;
-
-                foreach (var letter in line)
-                {
-                    var texture = font.GetTexture(letter.ToString());
-                    if (!texture.IsEmpty)
+                    var position = new Vector2(letterX, fontY) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
+                    var pixels = PixelArray(texture.Path);
+                    
+                    foreach (var pixel in pixels)
                     {
-                        var position = new Vector2(letterX, 197) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
-                        var pixels = PixelArray(texture.Path);
-                        
-                        foreach (var pixel in pixels)
-                        {
-                            var sprite = GetLayer("Pixel").CreateSprite("sb/px.png");
-                            sprite.Scale(OsbEasing.OutElastic, startTime, endTime - beat, 0, Random(1f, 3));
-                            sprite.Move(OsbEasing.OutQuart, startTime, startTime + beat * 2, 
-                                pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)), pixel + position);
-                            sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
-                                pixel + position, pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)));
-                            sprite.Fade(endTime, endTime + beat * 2, .8, 0);
-                            sprite.ColorHsb(startTime, endTime - beat, 0, 0, 1, 0, 0, .5);
-                            sprite.Additive(startTime);
-                        }
+                        var sprite = GetLayer("Pixel").CreateSprite("sb/px.png");
+                        sprite.Move(OsbEasing.OutExpo, startTime, startTime + beat * 2, 
+                            pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)), pixel + position);
+                        sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
+                            pixel + position, pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)));
+
+                        sprite.Scale(OsbEasing.OutElastic, startTime, endTime - beat, 0, Random(1f, 3));
+                        sprite.Fade(endTime, endTime + beat * 2, .8, 0);
+                        sprite.ColorHsb(startTime, endTime - beat, 0, 0, 1, 0, 0, .5);
+                        sprite.Additive(startTime);
                     }
-                    letterX += texture.BaseWidth * .8f;
                 }
-            };
-            MakePixelLine("誰の目も気にしないで", 28542, 31507);
-            MakePixelLine("終わらない future sound を", 34123, 37089);
-            MakePixelLine("終わらない future sound を", 56449, 59414);
-            MakePixelLine("終わらない future sound を", 159705, 161972);
-            MakePixelLine("終わらない future sound を", 170868, 173833);
-            MakePixelLine("終わらない future sound を", 265751, 268368);
+                letterX += texture.BaseWidth * .8f;
+            }
         }
     }
 }
