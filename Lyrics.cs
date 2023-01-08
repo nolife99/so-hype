@@ -3,6 +3,9 @@ using OpenTK.Graphics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Subtitles;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System;
 
 namespace StorybrewScripts
@@ -111,6 +114,70 @@ namespace StorybrewScripts
                 MakeLine("(ここにはいないような", 290868, 293484);
                 MakeLine("どこへ どこへ)", 293833, 296449);
             }
+
+            Func<string, List<Vector2>> PixelArray = path =>
+            {
+                var bitmapOri = new Bitmap(MapsetPath + "/" + path);
+                var bitmap = new Bitmap(bitmapOri, new Size(bitmapOri.Width, bitmapOri.Height));
+
+                var sprites = new List<Vector2>();
+                for (var y = 0; y < bitmap.Height; y += Random(7, 8) / 2) for (var x = 0; x < bitmap.Width; x += Random(7, 8) / 2) 
+                {
+                    var pixel = bitmap.GetPixel(x, y);
+                    if (pixel.R <= 0 || pixel.A <= 0) continue;
+
+                    sprites.Add(new Vector2(x, y) * .8f);
+                }
+
+                bitmap.Dispose();
+                bitmapOri.Dispose();
+                
+                return sprites;
+            };
+            Action<string, int, int> MakePixelLine = (line, startTime, endTime) =>
+            {
+                var width = 0f;
+                var height = 0f;
+
+                foreach (var letter in line)
+                {
+                    var texture = font.GetTexture(letter.ToString());
+                    width += texture.BaseWidth * .8f;
+                    height = Math.Max(height, texture.BaseHeight * .8f);
+                }
+
+                var letterX = 320 - width * .5f;
+
+                foreach (var letter in line)
+                {
+                    var texture = font.GetTexture(letter.ToString());
+                    if (!texture.IsEmpty)
+                    {
+                        var position = new Vector2(letterX, 197) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
+                        var pixels = PixelArray(texture.Path);
+                        
+                        foreach (var pixel in pixels)
+                        {
+                            var sprite = GetLayer("Pixel").CreateSprite("sb/px.png");
+                            sprite.Scale(OsbEasing.OutElastic, startTime, endTime - beat, 0, Random(1f, 3));
+                            sprite.Move(OsbEasing.OutQuart, startTime, startTime + beat * 2, 
+                                pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)), pixel + position);
+                            sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
+                                pixel + position, pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)));
+                            sprite.Fade(endTime, endTime + beat * 2, .8, 0);
+                            sprite.ColorHsb(startTime, endTime - beat, 0, 0, 1, 0, 0, .5);
+                            sprite.Additive(startTime);
+                        }
+                    }
+                    letterX += texture.BaseWidth * .8f;
+                }
+            };
+            MakePixelLine("誰の目も気にしないで", 28542, 31507);
+            MakePixelLine("終わらない future sound を", 34123, 37089);
+            MakePixelLine("終わらない future sound を", 56449, 59414);
+            MakePixelLine("終わらない future sound を", 159705, 161972);
+            MakePixelLine("終わらない future sound を", 170868, 173833);
+            MakePixelLine("終わらない future sound を", 265751, 268368);
         }
     }
 }
