@@ -30,9 +30,9 @@ namespace StorybrewScripts
             MakePixelLine("誰の目も気にしないで", 28542, 31507);
             MakePixelLine("終わらない future sound を", 34123, 37089);
             MakePixelLine("終わらない future sound を", 56449, 59414);
-            MakePixelLine("Time is over", 71275, 73368);
-            MakePixelLine("Time is over", 93600, 95693);
-            MakePixelLine("I'm a dreamer", 104763, 106856, 20);
+            MakePixelLine("Time is over...", 71275, 73368);
+            MakePixelLine("Time is over...", 93600, 95693);
+            MakePixelLine("I'm a dreamer...", 104763, 106856, 20);
             MakePixelLine("終わらない future sound を", 159705, 161972);
             MakePixelLine("終わらない future sound を", 170868, 173833);
             MakePixelLine("終わらない future sound を", 265751, 268368);
