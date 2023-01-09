@@ -12,7 +12,7 @@ namespace StorybrewScripts
 {
     class Lyrics : StoryboardObjectGenerator
     {
-        FontGenerator font, font2;
+        FontGenerator font;
         double beat;
 
         protected override void Generate()
@@ -26,12 +26,6 @@ namespace StorybrewScripts
                 Color = Color4.White,
                 FontSize = 50,
                 TrimTransparency = true
-            });
-            font2 = LoadFont($"{AssetPath}/fontCache", new FontDescription
-            {
-                FontPath = $"{ProjectPath}/assetlibrary/NotoSansJP.otf",
-                Color = Color4.White,
-                FontSize = 50
             });
 
             MakePixelLine("誰の目も気にしない", 28542, 31507);
