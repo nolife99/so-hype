@@ -11,12 +11,6 @@ namespace StorybrewScripts
         double beatD;
         const string bg = "63888719_p0.jpg", blur = "sb/blur.png";
 
-        /*
-            Why did I use for loops instead of OsbLoops?
-            Due to osu!'s use of integers instead of doubles for times, loops can get quite inaccurate over time.
-            In for loops, incrementing is accurate, although it is more command-heavy.
-            This song in particular has a precise beat duration, so this approach was better than OsbLoops.
-        */
         protected override void Generate()
         {
             bitmapH = GetMapsetBitmap(blur).Height;

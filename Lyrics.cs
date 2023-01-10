@@ -4,6 +4,7 @@ using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Subtitles;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Drawing;
 using System.IO;
 using System;
@@ -12,7 +13,7 @@ namespace StorybrewScripts
 {
     class Lyrics : StoryboardObjectGenerator
     {
-        FontGenerator font, font2;
+        FontGenerator font;
         double beat;
 
         protected override void Generate()
@@ -26,12 +27,6 @@ namespace StorybrewScripts
                 Color = Color4.White,
                 FontSize = 50,
                 TrimTransparency = true
-            });
-            font2 = LoadFont($"{AssetPath}/fontCache", new FontDescription
-            {
-                FontPath = $"{ProjectPath}/assetlibrary/NotoSansJP.otf",
-                Color = Color4.White,
-                FontSize = 50
             });
 
             MakePixelLine("誰の目も気にしない", 28542, 31507);
@@ -143,7 +138,7 @@ namespace StorybrewScripts
                 using (var bitmap = new Bitmap(Path.Combine(MapsetPath, path)))
                 {
                     var pixels = new List<Vector2>();
-                    for (var y = 0; y < bitmap.Height; y += 7 / 2) for (var x = 0; x < bitmap.Width; x += 7 / 2) 
+                    for (var y = 0; y < bitmap.Height; y += 3) for (var x = 0; x < bitmap.Width; x += 3) 
                     {
                         var pixel = bitmap.GetPixel(x, y);
                         if (pixel.R <= 20 || pixel.A <= 20) continue;
@@ -169,22 +164,26 @@ namespace StorybrewScripts
                 var texture = font.GetTexture(letter.ToString());
                 if (!texture.IsEmpty)
                 {
-                    var position = new Vector2(letterX, fontY - 43) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
+                    var position = new Vector2(letterX, fontY - 45) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
                     var pixels = GetPixelArray(texture.Path);
                     
-                    foreach (var pixel in pixels)
+                    Parallel.ForEach<Vector2>(pixels, pixel =>
                     {
                         var sprite = GetLayer("Pixel").CreateSprite("sb/px.png");
-                        sprite.Move(OsbEasing.OutExpo, startTime, startTime + beat * 2, 
-                            pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)), pixel + position);
-                        sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
-                            pixel + position, pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)));
+
+                        lock (pixels)
+                        {
+                            sprite.Move(OsbEasing.OutCubic, startTime, startTime + beat * 2, 
+                                pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)), pixel + position);
+                            sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
+                                pixel + position, pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)));
+                        }
 
                         sprite.Scale(OsbEasing.OutElastic, startTime, endTime - beat, 0, Random(1f, 3));
                         sprite.Fade(endTime, endTime + beat * 2, .8, 0);
                         sprite.ColorHsb(startTime, endTime - beat, 0, 0, 1, 0, 0, .5);
                         sprite.Additive(startTime);
-                    }
+                    });
                 }
                 letterX += texture.BaseWidth * .8f;
             }

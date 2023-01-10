@@ -3,6 +3,7 @@ using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Storyboarding3d;
 using StorybrewCommon.Animations;
+using System.Threading.Tasks;
 using System;
 
 using static OpenTK.MathHelper;
@@ -13,7 +14,6 @@ namespace StorybrewScripts
     {
         protected override void Generate()
         {
-            // This script takes an extremely long time to load!
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
             Action<CommandGenerator> config = g =>
@@ -32,7 +32,7 @@ namespace StorybrewScripts
                     .Until(e - 5000)
                     .Add(e, new Quaternion(DegreesToRadians(-10), 0, DegreesToRadians(45)), EasingFunctions.QuintIn);
 
-                for (var i = 0; i < 1000; i++)
+                Parallel.For(0, 1000, i => 
                 {
                     var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 8);
 
@@ -55,15 +55,15 @@ namespace StorybrewScripts
 
                     star.SpriteScale.Add(s, Random(.3f, .6f));
 
-                    p.Add(star);
-                }
+                    lock (p) p.Add(star);
+                });
             }, true);
             SceneConstructor(92903, 104065, (s, e, p) =>
             {
                 p.Rotation.Add(s, new Quaternion(DegreesToRadians(20), 0, DegreesToRadians(20)))
                     .Add(s + 2000, Quaternion.Identity, EasingFunctions.CubicOut);
 
-                for (var i = 0; i < 1000; i++)
+                Parallel.For(0, 1000, i => 
                 {
                     var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 7);
 
@@ -84,70 +84,64 @@ namespace StorybrewScripts
 
                     star.SpriteScale.Add(s, Random(.4f, .5f));
 
-                    p.Add(star);
-                }
+                    lock (p) p.Add(star);
+                });
             });
-            SceneConstructor(190577, 229647, (s, e, p) =>
+            SceneConstructor(190577, 229647, (s, e, p) => Parallel.For(0, 1000, i => 
             {
-                for (var i = 0; i < 800; i++)
+                var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
+
+                var star = new Sprite3d
                 {
-                    var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
+                    SpritePath = "sb/dot.png",
+                    UseDistanceFade = true,
+                    RotationMode = RotationMode.Fixed
+                };
+                star.ConfigureGenerators(config);
 
-                    var star = new Sprite3d
-                    {
-                        SpritePath = "sb/dot.png",
-                        UseDistanceFade = true,
-                        RotationMode = RotationMode.Fixed
-                    };
-                    star.ConfigureGenerators(config);
+                star.Opacity.Add(s, Random(.4f, .8f));
 
-                    star.Opacity.Add(s, Random(.4f, .8f));
+                star.PositionX.Add(s, pos.X);
+                star.PositionY.Add(s, pos.Y);
 
-                    star.PositionX.Add(s, pos.X);
-                    star.PositionY.Add(s, pos.Y);
+                star.PositionZ.Add(s, pos.Z)
+                    .Add(207321, pos.Z + 800, EasingFunctions.SineOut)
+                    .Add(e, pos.Z + 4000, EasingFunctions.SineIn);
 
-                    star.PositionZ.Add(s, pos.Z)
-                        .Add(207321, pos.Z + 800, EasingFunctions.SineOut)
-                        .Add(e, pos.Z + 4000, EasingFunctions.SineIn);
+                star.SpriteScale.Add(s, Random(.25f, .5f));
 
-                    star.SpriteScale.Add(s, Random(.25f, .5f));
-
-                    p.Add(star);
-                }
-            }, true);
-            SceneConstructor(279879, 302205, (s, e, p) =>
+                lock (p) p.Add(star);
+            }), true);
+            SceneConstructor(279879, 302205, (s, e, p) => Parallel.For(0, 1000, i => 
             {
-                for (var i = 0; i < 800; i++)
+                var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
+
+                var star = new Sprite3d
                 {
-                    var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
+                    SpritePath = "sb/dot.png",
+                    UseDistanceFade = true,
+                    RotationMode = RotationMode.Fixed
+                };
+                star.ConfigureGenerators(config);
 
-                    var star = new Sprite3d
-                    {
-                        SpritePath = "sb/dot.png",
-                        UseDistanceFade = true,
-                        RotationMode = RotationMode.Fixed
-                    };
-                    star.ConfigureGenerators(config);
+                star.Opacity.Add(s, Random(.4f, .8f))
+                    .Until(e - 500)
+                    .Add(e, 0);
 
-                    star.Opacity.Add(s, Random(.4f, .8f))
-                        .Until(e - 500)
-                        .Add(e, 0);
+                star.PositionX.Add(s, pos.X);
+                star.PositionY.Add(s, pos.Y);
 
-                    star.PositionX.Add(s, pos.X);
-                    star.PositionY.Add(s, pos.Y);
+                star.PositionZ.Add(s, pos.Z).Add(e, pos.Z + 5000);
 
-                    star.PositionZ.Add(s, pos.Z).Add(e, pos.Z + 5000);
+                star.SpriteScale.Add(s, Random(.25f, .5f));
 
-                    star.SpriteScale.Add(s, Random(.25f, .5f));
-
-                    p.Add(star);
-                }
-            }, true);
+                lock (p) p.Add(star);
+            }), true);
 
             stopwatch.Stop();
             Log($"Execution: {stopwatch.ElapsedMilliseconds / 1000d} seconds");
         }
-        void SceneConstructor(int startTime, int endTime, Action<int, int, Node3d> generate, bool fadeIn = false, bool fast = false)
+        void SceneConstructor(int startTime, int endTime, Action<int, int, Node3d> generate, bool fadeIn = false)
         {
             var scene = new Scene3d();
             var camera = new PerspectiveCamera();
