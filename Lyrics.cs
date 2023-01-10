@@ -170,19 +170,18 @@ namespace StorybrewScripts
                     Parallel.ForEach<Vector2>(pixels, pixel =>
                     {
                         var sprite = GetLayer("Pixel").CreateSprite("sb/px.png");
-
-                        lock (pixels)
-                        {
-                            sprite.Move(OsbEasing.OutCubic, startTime, startTime + beat * 2, 
-                                pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)), pixel + position);
-                            sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
-                                pixel + position, pixel + position + new Vector2(Random(-20f, 20), Random(-20f, 20)));
-                        }
-
                         sprite.Scale(OsbEasing.OutElastic, startTime, endTime - beat, 0, Random(1f, 3));
                         sprite.Fade(endTime, endTime + beat * 2, .8, 0);
                         sprite.ColorHsb(startTime, endTime - beat, 0, 0, 1, 0, 0, .5);
                         sprite.Additive(startTime);
+
+                        lock (pixels)
+                        {
+                            sprite.Move(OsbEasing.OutCubic, startTime, startTime + beat * 2, 
+                                pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)), pixel + position);
+                            sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
+                                pixel + position, pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)));
+                        }
                     });
                 }
                 letterX += texture.BaseWidth * .8f;
