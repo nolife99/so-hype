@@ -167,7 +167,7 @@ namespace StorybrewScripts
                     var position = new Vector2(letterX, fontY - 45) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
                     var pixels = GetPixelArray(texture.Path);
                     
-                    Parallel.ForEach<Vector2>(pixels, pixel =>
+                    foreach (var pixel in pixels)
                     {
                         var sprite = GetLayer("Pixel").CreateSprite("sb/px.png");
                         sprite.Scale(OsbEasing.OutElastic, startTime, endTime - beat, 0, Random(1f, 3));
@@ -175,14 +175,11 @@ namespace StorybrewScripts
                         sprite.ColorHsb(startTime, endTime - beat, 0, 0, 1, 0, 0, .5);
                         sprite.Additive(startTime);
 
-                        lock (pixels)
-                        {
-                            sprite.Move(OsbEasing.OutCubic, startTime, startTime + beat * 2, 
-                                pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)), pixel + position);
-                            sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
-                                pixel + position, pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)));
-                        }
-                    });
+                        sprite.Move(OsbEasing.OutCubic, startTime, startTime + beat * 2, 
+                            pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)), pixel + position);
+                        sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
+                            pixel + position, pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)));
+                    }
                 }
                 letterX += texture.BaseWidth * .8f;
             }

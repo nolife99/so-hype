@@ -112,7 +112,7 @@ namespace StorybrewScripts
 
                 lock (p) p.Add(star);
             }), true);
-            SceneConstructor(279879, 302205, (s, e, p) => Parallel.For(0, 1000, i => 
+            SceneConstructor(279879, 302205, (s, e, p) => Parallel.For(0, 1000, i =>
             {
                 var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
 
