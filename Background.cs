@@ -7,7 +7,7 @@ namespace StorybrewScripts
 {
     class Background : StoryboardObjectGenerator
     {
-        int bitmapH, beat;
+        int bitmapH;
         double beatD;
         const string bg = "63888719_p0.jpg", blur = "sb/blur.png";
 
@@ -15,7 +15,6 @@ namespace StorybrewScripts
         {
             bitmapH = GetMapsetBitmap(blur).Height;
             beatD = Beatmap.GetTimingPointAt(48949).BeatDuration;
-            beat = (int)beatD;
 
             ScreenFillHighlight(25228, 25926);
             ScreenFillHighlight(102670, 104065);

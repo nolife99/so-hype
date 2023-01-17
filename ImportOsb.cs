@@ -15,8 +15,7 @@ namespace StorybrewScripts
 
         protected override void Generate()
         {
-            using (var file = OpenProjectFile("assetlibrary/controlled spectrum data.osb")) 
-            using (var reader = new StreamReader(file, new UTF8Encoding()))
+            using (var reader = new StreamReader(OpenProjectFile("assetlibrary/controlled spectrum data.osb"), new UTF8Encoding()))
             reader.ParseSections(section =>
             {
                 switch (section)
@@ -51,6 +50,7 @@ namespace StorybrewScripts
                     sprite.EndGroup();
                     loopable = false;
                 }
+                
                 switch (v[0])
                 {
                     case "Sprite":
@@ -189,9 +189,7 @@ namespace StorybrewScripts
             }
         }
 
-        static string removeQuotes(string path) => path.StartsWith("\"") && path.EndsWith("\"") ? 
-            path.Substring(1, path.Length - 2) : path;
-
+        string removeQuotes(string path) => path.StartsWith("\"") && path.EndsWith("\"") ? path.Substring(1, path.Length - 2) : path;
         string applyVariables(string line)
         {
             if (!line.Contains("$")) return line;

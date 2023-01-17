@@ -13,7 +13,7 @@ namespace StorybrewScripts
 {
     class Lyrics : StoryboardObjectGenerator
     {
-        FontGenerator font;
+        FontGenerator pixFont;
         double beat;
 
         protected override void Generate()
@@ -21,11 +21,19 @@ namespace StorybrewScripts
             var scale = .3f;
             beat = Beatmap.GetTimingPointAt(4298).BeatDuration;
             
-            font = LoadFont("sb/f", new FontDescription
+            var font = LoadFont("sb/f", new FontDescription
             {
                 FontPath = $"{ProjectPath}/assetlibrary/NotoSansJP.otf",
                 Color = Color4.White,
                 FontSize = 50,
+                TrimTransparency = true
+            });
+
+            pixFont = LoadFont(Path.Combine(AssetPath, $"fontCache"), new FontDescription
+            {
+                FontPath = $"{AssetPath}/NotoSansJP.otf",
+                Color = Color4.White,
+                FontSize = 27,
                 TrimTransparency = true
             });
 
@@ -133,44 +141,29 @@ namespace StorybrewScripts
         }
         void MakePixelLine(string line, int startTime, int endTime, float fontY = 240)
         {
-            Func<string, List<Vector2>> GetPixelArray = path =>
-            {
-                using (var bitmap = new Bitmap(Path.Combine(MapsetPath, path)))
-                {
-                    var pixels = new List<Vector2>();
-                    for (var y = 0; y < bitmap.Height; y += 3) for (var x = 0; x < bitmap.Width; x += 3) 
-                    {
-                        var pixel = bitmap.GetPixel(x, y);
-                        if (pixel.R <= 20 || pixel.A <= 20) continue;
-
-                        pixels.Add(new Vector2(x, y) * .8f);
-                    }
-                    
-                    return pixels;
-                }
-            };
-
+            var scale = 1.6f;
             var width = 0f;
+
             foreach (var letter in line)
             {
-                var texture = font.GetTexture(letter.ToString());
-                width += texture.BaseWidth * .8f;
+                var texture = pixFont.GetTexture(letter.ToString());
+                width += texture.BaseWidth * scale;
             }
 
             var letterX = 320 - width * .5f;
 
             foreach (var letter in line)
             {
-                var texture = font.GetTexture(letter.ToString());
+                var texture = pixFont.GetTexture(letter.ToString());
                 if (!texture.IsEmpty)
                 {
-                    var position = new Vector2(letterX, fontY - 45) + texture.OffsetFor(OsbOrigin.TopLeft) * .8f;
-                    var pixels = GetPixelArray(texture.Path);
+                    var position = new Vector2(letterX, fontY - 45) + texture.OffsetFor(OsbOrigin.TopLeft) * scale;
+                    var pixels = ConvertToPixel(texture.Path, scale);
                     
                     foreach (var pixel in pixels)
                     {
                         var sprite = GetLayer("Pixel").CreateSprite("sb/px.png");
-                        sprite.Scale(OsbEasing.OutElastic, startTime, endTime - beat, 0, Random(1f, 3));
+                        sprite.Scale(OsbEasing.OutElastic, startTime, endTime - beat, 0, Random(1.5f, 3));
                         sprite.Fade(endTime, endTime + beat * 2, .8, 0);
                         sprite.ColorHsb(startTime, endTime - beat, 0, 0, 1, 0, 0, .5);
                         sprite.Additive(startTime);
@@ -181,8 +174,21 @@ namespace StorybrewScripts
                             pixel + position, pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)));
                     }
                 }
-                letterX += texture.BaseWidth * .8f;
+                letterX += texture.BaseWidth * scale;
             }
+        }
+        List<Vector2> ConvertToPixel(string path, float scale)
+        {
+            var pixels = new List<Vector2>();
+
+            using (var bitmap = new Bitmap(path))
+            for (var y = 0; y < bitmap.Height; y += 2) for (var x = 0; x < bitmap.Width; x += 2) 
+            {
+                var pixel = bitmap.GetPixel(x, y);
+                if (pixel.R > 50 || pixel.A > 50) pixels.Add(new Vector2(x, y) * scale);
+            }
+            
+            return pixels;
         }
     }
 }
