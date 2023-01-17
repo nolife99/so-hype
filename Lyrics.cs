@@ -29,7 +29,7 @@ namespace StorybrewScripts
                 TrimTransparency = true
             });
 
-            pixFont = LoadFont(Path.Combine(AssetPath, $"fontCache"), new FontDescription
+            pixFont = LoadFont(Path.Combine(ProjectPath, ".cache/fontCache"), new FontDescription
             {
                 FontPath = $"{AssetPath}/NotoSansJP.otf",
                 Color = Color4.White,
@@ -142,8 +142,22 @@ namespace StorybrewScripts
         void MakePixelLine(string line, int startTime, int endTime, float fontY = 240)
         {
             var scale = 1.6f;
-            var width = 0f;
+            Func<string, List<Vector2>> GetPixelArray = path =>
+            {
+                using (var bitmap = new Bitmap(Path.Combine(MapsetPath, path)))
+                {
+                    var pixels = new List<Vector2>();
+                    for (var y = 0; y < bitmap.Height; y += 2) for (var x = 0; x < bitmap.Width; x += 2) 
+                    {
+                        var pixel = bitmap.GetPixel(x, y);
+                        if (pixel.R > 50 || pixel.A > 50) pixels.Add(new Vector2(x, y) * scale);
+                    }
+                    
+                    return pixels;
+                }
+            };
 
+            var width = 0f;
             foreach (var letter in line)
             {
                 var texture = pixFont.GetTexture(letter.ToString());
@@ -158,7 +172,7 @@ namespace StorybrewScripts
                 if (!texture.IsEmpty)
                 {
                     var position = new Vector2(letterX, fontY - 45) + texture.OffsetFor(OsbOrigin.TopLeft) * scale;
-                    var pixels = ConvertToPixel(texture.Path, scale);
+                    var pixels = GetPixelArray(texture.Path);
                     
                     foreach (var pixel in pixels)
                     {
@@ -176,19 +190,6 @@ namespace StorybrewScripts
                 }
                 letterX += texture.BaseWidth * scale;
             }
-        }
-        List<Vector2> ConvertToPixel(string path, float scale)
-        {
-            var pixels = new List<Vector2>();
-
-            using (var bitmap = new Bitmap(path))
-            for (var y = 0; y < bitmap.Height; y += 2) for (var x = 0; x < bitmap.Width; x += 2) 
-            {
-                var pixel = bitmap.GetPixel(x, y);
-                if (pixel.R > 50 || pixel.A > 50) pixels.Add(new Vector2(x, y) * scale);
-            }
-            
-            return pixels;
         }
     }
 }
