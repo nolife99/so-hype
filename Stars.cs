@@ -1,7 +1,8 @@
-using OpenTK;
+using System.Numerics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Storyboarding3d;
+using StorybrewCommon.Storyboarding.Util;
 using StorybrewCommon.Animations;
 using System;
 
@@ -26,10 +27,10 @@ namespace StorybrewScripts
             {
                 var duration = e - s;
 
-                p.Rotation.Add(s, new Quaternion(DegreesToRadians(25), 0, DegreesToRadians(25)))
+                p.Rotation.Add(s, new Quaternion(DegreesToRadians(25), 0, DegreesToRadians(25), 1))
                     .Add(s + 2000, Quaternion.Identity, EasingFunctions.BackOut)
                     .Until(e - 5000)
-                    .Add(e, new Quaternion(DegreesToRadians(-10), 0, DegreesToRadians(45)), EasingFunctions.QuintIn);
+                    .Add(e, new Quaternion(DegreesToRadians(-10), 0, DegreesToRadians(45), 1), EasingFunctions.QuintIn);
 
                 for (var i = 0; i < 1000; i++)
                 {
@@ -59,7 +60,7 @@ namespace StorybrewScripts
             }, true);
             SceneConstructor(92903, 104065, (s, e, p) =>
             {
-                p.Rotation.Add(s, new Quaternion(DegreesToRadians(20), 0, DegreesToRadians(20)))
+                p.Rotation.Add(s, new Quaternion(DegreesToRadians(20), 0, DegreesToRadians(20), 1))
                     .Add(s + 2000, Quaternion.Identity, EasingFunctions.CubicOut);
 
                 for (var i = 0; i < 1000; i++)
@@ -164,7 +165,7 @@ namespace StorybrewScripts
             var parent = scene.Root;
             generate(startTime, endTime, parent);
 
-            scene.Generate(camera, GetLayer(""), startTime, endTime, Beatmap.GetTimingPointAt(startTime).BeatDuration / 8);
+            scene.Generate(camera, GetLayer(""), startTime, endTime, Beatmap.GetTimingPointAt(startTime).BeatDuration / 16);
 
             if (fadeIn)
             {
