@@ -1,9 +1,9 @@
-using System.Numerics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Storyboarding3d;
 using StorybrewCommon.Storyboarding.Util;
 using StorybrewCommon.Animations;
+using System.Numerics;
 using System;
 
 using static OpenTK.MathHelper;
