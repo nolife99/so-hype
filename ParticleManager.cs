@@ -1,7 +1,7 @@
-using OpenTK;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Animations;
+using System.Numerics;
 
 using static StorybrewCommon.OpenTKUtil.MathHelper;
 

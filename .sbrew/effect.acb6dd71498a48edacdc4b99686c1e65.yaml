@@ -6,10 +6,12 @@ Config:
   UseSpritePool:
     Type: "System.Boolean"
     Value: "True"
+    DisplayName: "Use Sprite Pool"
   RandomSeed:
     Type: "System.Int32"
     Value: "0"
-    DisplayName: "Random seed"
+    DisplayName: "Random Seed"
+    BeginsGroup: "Common"
 Layers:
   6f45c518cce74f018b92c2ae7ac9e480:
     Name: "BG"

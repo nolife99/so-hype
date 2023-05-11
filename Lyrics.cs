@@ -23,13 +23,13 @@ namespace StorybrewScripts
             
             var font = LoadFont("sb/f", new FontDescription
             {
-                FontPath = $"{ProjectPath}/assetlibrary/NotoSansJP.otf",
+                FontPath = $"{AssetPath}/NotoSansJP.otf",
                 Color = Color4.White,
                 FontSize = 50,
                 TrimTransparency = true
             });
 
-            pixFont = LoadFont(Path.Combine(ProjectPath, ".cache/fontCache"), new FontDescription
+            pixFont = LoadFont($"{ProjectPath}/.cache/fontCache", new FontDescription
             {
                 FontPath = $"{AssetPath}/NotoSansJP.otf",
                 Color = Color4.White,
@@ -103,7 +103,7 @@ namespace StorybrewScripts
                 MakeLine("誰の目も気にしないで", 8833, 12496);
                 MakeLine("You will get high 宇宙へ", 12670, 14589);
                 MakeLine("I'm a dreamer", 15461, 16856);
-                MakeLine("妄想じゃない that's true", 17205, 19647);
+                MakeLine("妄想じゃない that's true", 17205, 19647);
                 MakeLine("終わらない future sound を", 19996, 22961);
                 MakeLine("Music 僕らずっと", 23135, 24530);
                 MakeLine("So hype", 24879, 25751);
@@ -112,7 +112,7 @@ namespace StorybrewScripts
                 MakeLine("誰の目も気にしないで", 75809, 79472);
                 MakeLine("You will get high 宇宙へ", 79647, 81565);
                 MakeLine("I'm a dreamer", 82437, 83833);
-                MakeLine("妄想じゃない that's true", 84182, 86623);
+                MakeLine("妄想じゃない that's true", 84182, 86623);
                 MakeLine("終わらない future sound を", 86972, 89937);
                 MakeLine("Music 僕らずっと", 90112, 91507);
                 MakeLine("So hype", 91856, 92903);
@@ -144,17 +144,16 @@ namespace StorybrewScripts
             var scale = 1.6f;
             Func<string, List<Vector2>> GetPixelArray = path =>
             {
-                using (var bitmap = new Bitmap(Path.Combine(MapsetPath, path)))
+                var bitmap = GetMapsetBitmap(path, false);
+
+                var pixels = new List<Vector2>();
+                for (var y = 0; y < bitmap.Height; y += 2) for (var x = 0; x < bitmap.Width; x += 2) 
                 {
-                    var pixels = new List<Vector2>();
-                    for (var y = 0; y < bitmap.Height; y += 2) for (var x = 0; x < bitmap.Width; x += 2) 
-                    {
-                        var pixel = bitmap.GetPixel(x, y);
-                        if (pixel.R > 50 || pixel.A > 50) pixels.Add(new Vector2(x, y) * scale);
-                    }
-                    
-                    return pixels;
+                    var pixel = bitmap.GetPixel(x, y);
+                    if (pixel.R > 50 || pixel.A > 50) pixels.Add(new Vector2(x, y) * scale);
                 }
+                
+                return pixels;
             };
 
             var width = 0f;
@@ -182,9 +181,9 @@ namespace StorybrewScripts
                         sprite.ColorHsb(startTime, endTime - beat, 0, 0, 1, 0, 0, .5);
                         sprite.Additive(startTime);
 
-                        sprite.Move(OsbEasing.OutCubic, startTime, startTime + beat * 2, 
+                        sprite.Move(OsbEasing.Out, startTime, startTime + beat * 2, 
                             pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)), pixel + position);
-                        sprite.Move(OsbEasing.OutCubic, endTime, endTime + beat * 2, 
+                        sprite.Move(OsbEasing.Out, endTime, endTime + beat * 2, 
                             pixel + position, pixel + position + new Vector2(Random(-20, 20), Random(-20, 20)));
                     }
                 }

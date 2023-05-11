@@ -2,7 +2,9 @@ using OpenTK;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Storyboarding3d;
+using StorybrewCommon.Storyboarding.Util;
 using StorybrewCommon.Animations;
+using Vector = System.Numerics;
 using System;
 
 using static OpenTK.MathHelper;
@@ -33,7 +35,7 @@ namespace StorybrewScripts
 
                 for (var i = 0; i < 1000; i++)
                 {
-                    var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 8);
+                    var pos = new Vector.Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 8);
 
                     var star = new Sprite3d
                     {
@@ -90,7 +92,7 @@ namespace StorybrewScripts
             {
                 for (var i = 0; i < 1000; i++)
                 {
-                    var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
+                    var pos = new Vector.Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
 
                     var star = new Sprite3d
                     {
@@ -118,7 +120,7 @@ namespace StorybrewScripts
             {
                 for (var i = 0; i < 1000; i++)
                 {
-                    var pos = new Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
+                    var pos = new Vector.Vector3(Random(-5024, 5024), Random(-3600, 3600), -i * 10);
 
                     var star = new Sprite3d
                     {
@@ -164,11 +166,11 @@ namespace StorybrewScripts
             var parent = scene.Root;
             generate(startTime, endTime, parent);
 
-            scene.Generate(camera, GetLayer(""), startTime, endTime, Beatmap.GetTimingPointAt(startTime).BeatDuration / 8);
+            scene.Generate(camera, GetLayer(""), startTime, endTime, Beatmap.GetTimingPointAt(startTime).BeatDuration / 16);
 
             if (fadeIn)
             {
-                var back = GetLayer("").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector2(-107, 0));
+                var back = GetLayer("").CreateSprite("sb/px.png", OsbOrigin.TopLeft, new Vector.Vector2(-107, 0));
                 back.ScaleVec(startTime, 854, 480);
                 back.Fade(startTime, startTime + 1000, 1, 0);
                 back.Color(startTime, 0, 0, 0);

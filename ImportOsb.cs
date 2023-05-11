@@ -15,7 +15,7 @@ namespace StorybrewScripts
 
         protected override void Generate()
         {
-            using (var reader = new StreamReader(OpenProjectFile("assetlibrary/controlled spectrum data.osb"), new UTF8Encoding()))
+            using (var reader = new StreamReader(OpenProjectFile($"{AssetPath}/controlled spectrum data.osb"), new UTF8Encoding()))
             reader.ParseSections(section =>
             {
                 switch (section)
