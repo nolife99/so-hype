@@ -1,7 +1,7 @@
-using OpenTK;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.OpenTKUtil;
+using System.Numerics;
 using System;
 
 using static StorybrewCommon.OpenTKUtil.MathHelper;
@@ -48,7 +48,7 @@ namespace StorybrewScripts
         {
             var beat = Beatmap.GetTimingPointAt(start).BeatDuration;
             var spinDur = beat * spinMult;
-            var rotFunc = new Quaterniond(DegreesToRadians(42.5), 0, DegreesToRadians(17.5));
+            var rotFunc = Quaternion.CreateFromYawPitchRoll(0, DegreesToRadians(17.5f), DegreesToRadians(42.5f));
 
             var back = GetLayer("").CreateSprite("sb/dot.png", OsbOrigin.Centre, new Vector2(317, 238));
             back.Scale(OsbEasing.OutBack, start, start + beat * 4, 0, 4.5);
@@ -61,9 +61,12 @@ namespace StorybrewScripts
                 if (i > split && i < split * 2) break;
                 else if (i == split * 2) i = 1;
 
-                var rad = size * Sin(c / dots.Y * Pi);
-                var basePos = new Vector3d(rad * Cos(r / dots.X * TwoPi), size * Cos(c / dots.Y * Pi), rad * Sin(r / dots.X * TwoPi));
-                var pos = Vector3d.Transform(basePos, rotFunc);
+                var rad = (float)(size * Sin(c / dots.Y * Pi));
+                var basePos = new Vector3(
+                    rad * (float)Cos(r / dots.X * TwoPi), 
+                    (float)size * (float)Cos(c / dots.Y * Pi), 
+                    rad * (float)Sin(r / dots.X * TwoPi));
+                var pos = Vector3.Transform(basePos, rotFunc);
 
                 var sprite = GetLayer("").CreateSprite("sb/dot.png", OsbOrigin.Centre, new Vector2(0, (float)pos.Y + 240));
                 var delay = Abs(c - dots.Y / 2) * 100;
