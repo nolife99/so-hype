@@ -1,12 +1,9 @@
-using OpenTK;
-using OpenTK.Graphics;
 using StorybrewCommon.Scripting;
 using StorybrewCommon.Storyboarding;
 using StorybrewCommon.Subtitles;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Numerics;
 using System.Drawing;
-using System.IO;
 using System;
 
 namespace StorybrewScripts
@@ -24,7 +21,7 @@ namespace StorybrewScripts
             var font = LoadFont("sb/f", new FontDescription
             {
                 FontPath = $"{AssetPath}/NotoSansJP.otf",
-                Color = Color4.White,
+                Color = Color.White,
                 FontSize = 50,
                 TrimTransparency = true
             });
@@ -32,7 +29,7 @@ namespace StorybrewScripts
             pixFont = LoadFont($"{ProjectPath}/.cache/fontCache", new FontDescription
             {
                 FontPath = $"{AssetPath}/NotoSansJP.otf",
-                Color = Color4.White,
+                Color = Color.White,
                 FontSize = 27,
                 TrimTransparency = true
             });

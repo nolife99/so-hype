@@ -39,8 +39,8 @@ namespace StorybrewScripts
                     var star = new Sprite3d
                     {
                         SpritePath = "sb/dot.png",
-                        UseDistanceFade = true,
-                        RotationMode = RotationMode.Fixed
+                        RotationMode = RotationMode.Fixed,
+                        UseDistanceFade = true
                     };
                     star.ConfigureGenerators(config);
 
